@@ -63,6 +63,8 @@ public class PCEngine implements Engine {
 
         long lastTime = System.nanoTime();
         logica.init();
+
+
         while (_running) {
             long currentTime = System.nanoTime();
             double nanoElapsedTime = currentTime - lastTime;

@@ -23,7 +23,7 @@ public class Main {
         frame.pack();
         frame.setVisible(true);
 
-        frame.setSize(1080, 720);
+        frame.setSize(600, 400);
         frame.setIgnoreRepaint(true);
         frame.createBufferStrategy(2);
         BufferStrategy strat = frame.getBufferStrategy();
@@ -33,6 +33,8 @@ public class Main {
         _logic = new Logic();
         engine = new PCEngine(_logic, frame);
         _logic.getEngine(engine);
+
+
 
         //Comenzamos el bucle principal
         try {

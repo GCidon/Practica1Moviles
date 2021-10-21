@@ -12,8 +12,8 @@ public class Logic implements gdv.ohno.engine.Logic {
     }
     public void render(Graphics g) throws Exception {
         g.clear(0xFF000000);
-        g.setColor(0xFFFFFFFF);
-        g.fillRect(0,0, -100, -100);
+        g.setColor(0xFFFFAAFF);
+        g.fillRect(0,0, 100, 100);
     }
     public void handleInput(List<Input.TouchEvent> te) throws Exception {
 
@@ -24,4 +24,5 @@ public class Logic implements gdv.ohno.engine.Logic {
     public void getEngine(Engine engine) {
 
     }
+
 }
