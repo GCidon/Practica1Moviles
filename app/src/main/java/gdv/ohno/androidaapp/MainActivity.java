@@ -81,5 +81,5 @@ public class MainActivity extends AppCompatActivity {
 
     protected SurfaceView _surface;
     protected AndroidEngine engine;
-    protected Logic _logic;
+    protected gdv.ohno.engine.Logic _logic;
 }
