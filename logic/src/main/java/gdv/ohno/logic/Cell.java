@@ -5,7 +5,7 @@ import gdv.ohno.engine.Input;
 
 public class Cell extends GameObject {
     enum Type {Empty,Blue,Red,FixedBlue,FixedRed}
-    private int[] Colors = {0xFFDCDCDC, 0xFF0000FF, 0xFFFF0000, 0xFF000044, 0xFF440000};
+    private int[] Colors = {0xFFDCDCDC, 0xFF0000FF, 0xFFFF0000, 0xFF0000FF, 0xFFFF0000};
     public Cell(int x, int y, int w, int h, int n, Type type) {
         super(x, y, w, h);
         _n=n;
@@ -20,22 +20,35 @@ public class Cell extends GameObject {
     public void setType(Type t){
         _type=t;
     }
+    public void setLogic(Logic logic) { _logic = logic; }
 
     public void update(float deltaTime) {
 
     }
 
     public void render(Graphics g) {
-        g.save();
         g.setColor(Colors[_type.ordinal()]);
         g.fillCircle((int)_x, (int)_y, (int)_w);
-        g.restore();
+
     }
 
     public void handleInput(Input.TouchEvent e) throws Exception {
-
+        switch (_type) {
+                case Empty:
+                    _type = Type.Blue;
+                    break;
+                case Blue:
+                    _type = Type.Red;
+                    break;
+                case Red:
+                    _type = Type.Empty;
+                    break;
+                default:
+                    break;
+        }
     }
 
     private int _n;
     private Type _type;
+    private Logic _logic;
 }

@@ -1,12 +1,14 @@
 package gdv.ohno.logic;
 
 import gdv.ohno.engine.Graphics;
+import gdv.ohno.engine.Input;
 
 public class Board {
     public Board(int size, int width){
         _board=new Cell[size][size];
         _size=size;
         _windowWidth = width;
+        _inix = _iniy = -_windowWidth/2;
     }
     public int NextTo(int x,int y){
         int next = 0;
@@ -85,6 +87,7 @@ public class Board {
         for(int i = 0; i < _board.length; i++) {
             for(int j = 0; j < _board[i].length; j++) {
                 _board[i][j] = new Cell(i*cellWidth-(_windowWidth/2),j*cellWidth-(_windowWidth/2), cellWidth, cellWidth, 1, Cell.Type.Empty);
+                _board[i][j].setLogic(_logic);
             }
         }
     }
@@ -94,6 +97,20 @@ public class Board {
             for(int j = 0; j < _board[i].length; j++) {
                 _board[i][j].render(g);
             }
+        }
+    }
+    public void handleInput(Input.TouchEvent e) throws Exception {
+        //Transformacion de la pulsacion a posicion del tablero
+        float ratonx = (e.getPosX()-_logic._engine.getGraphics().getWidth()/2)-_inix;
+        float ratony = (_logic._engine.getGraphics().getHeight()/2-e.getPosY())-_iniy;
+
+        //Comprobar si la pulsacion esta dentro del tablero
+        if(ratony > 0 && ratony < _windowWidth) {
+            //Traduccion a casilla especifica
+            int casillax = (int) (Math.abs(ratonx / (_windowWidth / _size)));
+            int casillay = (int) (Math.abs(ratony / (_windowWidth / _size)));
+
+            _board[casillax][casillay].handleInput(e);
         }
     }
     public boolean CheckWin(){
@@ -137,6 +154,12 @@ public class Board {
         }
     }
 
+    public void setLogic(Logic logic) {_logic = logic;}
+
+    private int _inix;
+    private int _iniy;
+
+    private Logic _logic;
     private Cell[][] _board;
     private int _size;
     private int _windowWidth;
