@@ -3,9 +3,10 @@ package gdv.ohno.logic;
 import gdv.ohno.engine.Graphics;
 
 public class Board {
-    public Board(int size){
+    public Board(int size, int width){
         _board=new Cell[size][size];
         _size=size;
+        _windowWidth = width;
     }
     public int NextTo(int x,int y){
         int next = 0;
@@ -80,11 +81,20 @@ public class Board {
         return next;
     }
     public void GenerateBoard(){
-
+        int cellWidth = _windowWidth/_size;
+        for(int i = 0; i < _board.length; i++) {
+            for(int j = 0; j < _board[i].length; j++) {
+                _board[i][j] = new Cell(i*cellWidth-(_windowWidth/2),j*cellWidth-(_windowWidth/2), cellWidth, cellWidth, 1, Cell.Type.Empty);
+            }
+        }
     }
     public void render(Graphics g)
     {
-
+        for(int i = 0; i < _board.length; i++) {
+            for(int j = 0; j < _board[i].length; j++) {
+                _board[i][j].render(g);
+            }
+        }
     }
     public boolean CheckWin(){
         int n = 0, next = 0;
@@ -127,7 +137,7 @@ public class Board {
         }
     }
 
-
     private Cell[][] _board;
     private int _size;
+    private int _windowWidth;
 }

@@ -23,7 +23,7 @@ public class Main {
         frame.pack();
         frame.setVisible(true);
 
-        frame.setSize(600, 400);
+        frame.setSize(400, 600);
         frame.setIgnoreRepaint(true);
         frame.createBufferStrategy(2);
         BufferStrategy strat = frame.getBufferStrategy();

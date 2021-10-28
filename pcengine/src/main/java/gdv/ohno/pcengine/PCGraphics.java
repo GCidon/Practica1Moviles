@@ -43,7 +43,6 @@ public class PCGraphics implements Graphics {
     }
 
     public void translate(int x, int y) {
-
         _graphics.translate(x, y);
     }
 
@@ -89,7 +88,7 @@ public class PCGraphics implements Graphics {
 
     @Override
     public void fillCircle(int x, int y, int r) {
-        //to do
+        _graphics.fillOval(x, y, r, r);
     }
 
     @Override
