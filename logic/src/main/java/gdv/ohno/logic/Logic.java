@@ -7,6 +7,11 @@ import gdv.ohno.engine.Graphics;
 import gdv.ohno.engine.Input;
 
 public class Logic implements gdv.ohno.engine.Logic {
+
+    public Logic() {
+
+    }
+
     public void update(float deltaTime) {
 
     }
@@ -19,10 +24,13 @@ public class Logic implements gdv.ohno.engine.Logic {
 
     }
     public void init() throws Exception {
-
+        _engine.getGraphics().setBaseWidth(640);
+        _engine.getGraphics().setBaseHeight(480);
     }
     public void getEngine(Engine engine) {
-
+        _engine = engine;
     }
+
+    Engine _engine;
 
 }
