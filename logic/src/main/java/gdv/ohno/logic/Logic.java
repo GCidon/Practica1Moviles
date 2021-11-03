@@ -30,7 +30,7 @@ public class Logic implements gdv.ohno.engine.Logic {
         _engine.getGraphics().setBaseWidth(400);
         _engine.getGraphics().setBaseHeight(600);
 
-        _board = new Board(9, (int)_engine.getGraphics().getWidth());
+        _board = new Board(4, (int)_engine.getGraphics().getWidth());
         _board.setLogic(this);
         _board.GenerateBoard();
     }
