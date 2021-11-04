@@ -77,11 +77,12 @@ public class Board {
 
         return next;
     }
-    public void GenerateBoard(){
-        int cellWidth = _windowWidth/_size;
-        for(int i = 0; i < _board.length; i++) {
-            for(int j = 0; j < _board[i].length; j++) {
-                _board[i][j] = new Cell(i*cellWidth-(_windowWidth/2),j*cellWidth-(_windowWidth/2), cellWidth, cellWidth, j, Cell.Type.Empty);
+
+    public void GenerateBoard() {
+        int cellWidth = _windowWidth / _size;
+        for (int i = 0; i < _board.length; i++) {
+            for (int j = 0; j < _board[i].length; j++) {
+                _board[i][j] = new Cell(i * cellWidth - (_windowWidth / 2), j * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, j, Cell.Type.Empty);
                 _board[i][j].setLogic(_logic);
             }
         }
@@ -149,15 +150,18 @@ public class Board {
         }
     }
 
-    public int getSize() { return _size; }
+    public int getSize() {
+        return _size;
+    }
+
     /**
-     *  Returns the count of the specified cell type in the specified direction from the origin position
-     *  It goes recursively through all the board in the specified direction.
-     * @param pos   the initial pos.
-     * @param dir   the direction to path in the board.
-     * @param type  the cell type to look for.
+     * Returns the count of the specified cell type in the specified direction from the origin position
+     * It goes recursively through all the board in the specified direction.
      *
-     * @return  the total count.
+     * @param pos  the initial pos.
+     * @param dir  the direction to path in the board.
+     * @param type the cell type to look for.
+     * @return the total count.
      */
     public int countAdjacent(Vector2D pos, Vector2D dir, Cell.Type type) {
         int n = 0;
@@ -171,6 +175,50 @@ public class Board {
         }
 
         return n;
+    }
+
+    /**
+     * Looks for the cell of the given type in the specified direction
+     *
+     * @param pos  the initial pos
+     * @param dir  the direction to path
+     * @param type the cell type to look for
+     * @return the first cell of the given type in the specified direction
+     */
+    public Cell lookForCell(Vector2D pos, Vector2D dir, Cell.Type type) {
+        Cell c = null;
+
+        Vector2D newPos = Vector2D.sum(pos, dir);
+
+        if (!outOfBoard(newPos)) {
+            while (!outOfBoard(newPos)) {
+                newPos = Vector2D.sum(newPos, dir);
+                if (_board[newPos.x][newPos.y].getType() == type) {
+                    c = _board[newPos.x][newPos.y];
+                }
+            }
+        }
+
+        return c;
+    }
+
+    /**
+     * Gets the next cell in the given direction
+     *
+     * @param pos
+     * @param dir
+     * @return
+     */
+    public Cell nextCell(Vector2D pos, Vector2D dir) {
+        Cell c = null;
+
+        Vector2D newPos = Vector2D.sum(pos, dir);
+
+        if (!outOfBoard(newPos)) {
+            c = _board[newPos.x][newPos.y];
+        }
+
+        return c;
     }
 
     public Cell[][] getBoard() {

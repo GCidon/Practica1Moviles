@@ -42,7 +42,7 @@ public class Cell extends GameObject {
         g.setColor(Colors[_type.ordinal()]);
         g.fillCircle((int) _x, (int) _y, (int) _w);
 
-        if(_n!=0) {
+        if (_n != 0 && _isNumber) {
             g.setColor(0xFF000000);
             g.drawText(Integer.toString(_n), (int) (_x + _w / 3), (int) (_y + _h / 1.5));
         }
@@ -67,6 +67,7 @@ public class Cell extends GameObject {
     private int _n;
     private Type _type;
     private Logic _logic;
+    private boolean _isNumber;
 }
 
 

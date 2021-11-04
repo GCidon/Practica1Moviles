@@ -16,7 +16,10 @@ public class HintManager {
                         _hint = new Hint(1);
                     }
                     // PISTA 2
-
+                    else if (greaterThanNumber(t)) {
+                        System.out.println("PISTA 2 y tal");
+                        _hint = new Hint(2);
+                    }
                     // PISTA 3
                 }
 
@@ -25,7 +28,7 @@ public class HintManager {
     }
 
     public boolean fillWithWalls(Cell c) {
-        //Si un número tiene ya visibles el número de celdas que dice, se puede poner paredes en los extremos
+        // Si un número tiene ya visibles el número de celdas que dice, se puede poner paredes en los extremos
         int count = 0;
 
         // contar las celdas azules adyacentes en todas las direcciones
@@ -36,6 +39,23 @@ public class HintManager {
 
         if (count == c.getNumber())
             return true;
+        return false;
+    }
+
+    public boolean greaterThanNumber(Cell c) {
+        // Comprueba los adyacentes y si hay un gris que si se transforma en azul supera
+        // el numero de la celda observada devuelve true
+        int count = 0;
+
+        // Devuelve la primera celda gris en la direccion dada
+        Cell emptyCell = _board.lookForCell(new Vector2D(c.getX(), c.getY()), _dirs[0], Cell.Type.Empty);
+        if (emptyCell != null) {
+            System.out.println("Hay un gris socio por ahi vacio socio");
+        }
+
+        if (count > c.getNumber())
+            return true;
+
         return false;
     }
 
