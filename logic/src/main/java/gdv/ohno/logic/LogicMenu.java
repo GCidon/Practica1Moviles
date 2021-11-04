@@ -6,6 +6,7 @@ import java.util.List;
 import gdv.ohno.engine.Engine;
 import gdv.ohno.engine.Font;
 import gdv.ohno.engine.Graphics;
+import gdv.ohno.engine.Image;
 import gdv.ohno.engine.Input;
 
 public class LogicMenu {
@@ -16,22 +17,22 @@ public class LogicMenu {
         _buttons = new ArrayList();
     }
 
-    //Iniciamos los botones
     public void init() throws Exception {
-        Button easyGame = new Button(-305, 90, 400, 20, "game", _logica);
-        _buttons.add(easyGame);
-        Button diffGame = new Button(-305, 150, 400, 20, "diffgame", _logica);
-        _buttons.add(diffGame);
+        _fonts[0] = _engine.getGraphics().newFont("fonts/JosefinSans-Bold.ttf", 50, true);
+        _fonts[1] = _engine.getGraphics().newFont("fonts/Molle-Regular.ttf", 30, false);
 
-        _fonts[0] = _engine.getGraphics().newFont("Fuentes/Bungee-Regular.ttf", 50, true);
-        _fonts[1] = _engine.getGraphics().newFont("Fuentes/Bungee-Regular.ttf", 30, false);
+        _images[0] = _engine.getGraphics().newImage("sprites/lock.png");
+        _images[1] = _engine.getGraphics().newImage("sprites/q42.png");
     }
 
     //Renderizamos todo el texto
     public void render(Graphics g) throws Exception {
         g.clear(0xFFFFFFFF);
-        g.save();
 
+        g.save();
+        g.scale(-1);
+        g.rotate(180);
+        g.drawImage(_images[1], (int)g.getBaseWidth()/2, (int)g.getBaseHeight()/2, 200, 200);
         g.restore();
 
         for(int i = 0; i < _buttons.size(); i++) {
@@ -56,5 +57,6 @@ public class LogicMenu {
 
     Logic _logica;
     Engine _engine;
-    Font _fonts[] = new Font[6];
+    Font _fonts[] = new Font[2];
+    Image _images[] = new Image[5];
 }

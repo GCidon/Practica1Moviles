@@ -5,7 +5,7 @@ import gdv.ohno.engine.Input;
 
 public class Button extends GameObject {
     public Button(float x, float y, float w, float h, String action, Logic logic) {
-        super(x, y, w, h);
+        super((int)x, (int)y, w, h);
         _action = action;
         _logic = logic;
     }

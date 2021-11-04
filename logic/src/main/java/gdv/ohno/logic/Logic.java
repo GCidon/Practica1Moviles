@@ -10,6 +10,8 @@ import gdv.ohno.engine.Input;
 
 public class Logic implements gdv.ohno.engine.Logic {
 
+    enum GameState {MENU, LEVEL};
+
     public Logic() {
 
     }
@@ -17,42 +19,52 @@ public class Logic implements gdv.ohno.engine.Logic {
     public void update(float deltaTime) {
 
     }
+
     public void render(Graphics g) throws Exception {
-        g.clear(0xFFFFFFFF);
-
-        g.setFont(_fonts[0]);
-        g.setColor(0xFF000000);
-        String sizeText = _board.getSize() + "x" + _board.getSize();
-        g.drawText(sizeText, (int) (-40), (int) (-220));
-
-        g.save();
-        g.scale(-1);
-        g.drawImage(_images[0], -75, -220, -50, -50);
-        g.drawImage(_images[1], 125, -220, -50, -50);
-        g.drawImage(_images[2], 25, -220, -50, -50);
-        g.restore();
-
-        _board.render(g);
+        switch (_state) {
+            case MENU:
+                _logicMenu.render(g);
+                break;
+            case LEVEL:
+                _logicGame.render(g);
+                break;
+        }
     }
     public void handleInput(List<Input.TouchEvent> te) throws Exception {
-        for(Input.TouchEvent e: te) {
-            _board.handleInput(e);
+        switch (_state) {
+            case MENU:
+                _logicMenu.handleInput(te);
+                break;
+            case LEVEL:
+                _logicGame.handleInput(te);
+                break;
         }
     }
     public void init() throws Exception {
         _engine.getGraphics().setBaseWidth(400);
         _engine.getGraphics().setBaseHeight(600);
 
-        _fonts[0] = _engine.getGraphics().newFont("fonts/JosefinSans-Bold.ttf", 50, true);
-        _fonts[1] = _engine.getGraphics().newFont("fonts/Molle-Regular.ttf", 30, false);
+        startMenu();
+    }
 
-        _images[0] = _engine.getGraphics().newImage("sprites/eye.png");
-        _images[1] = _engine.getGraphics().newImage("sprites/close.png");
-        _images[2] = _engine.getGraphics().newImage("sprites/history.png");
+    public void startMenu() throws Exception {
+        _state = GameState.MENU;
+        _logicMenu = new LogicMenu(_engine, this);
+        try {
+            _logicMenu.init();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-        _board = new Board(4, (int)_engine.getGraphics().getWidth());
-        _board.setLogic(this);
-        _board.GenerateBoard();
+    public void startGame(int size) throws Exception {
+        _state = GameState.LEVEL;
+        _logicGame = new LogicGame(_engine, this, size);
+        try {
+            _logicGame.init();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     //diferentes acciones para botones
@@ -66,13 +78,12 @@ public class Logic implements gdv.ohno.engine.Logic {
     public void getEngine(Engine engine) {
         _engine = engine;
     }
-    public Board getBoard() {
-        return _board;
-    }
 
     Engine _engine;
-    private Board _board;
-    Font _fonts[] = new Font[6];
-    Image _images[] = new Image[5];
+
+    LogicGame _logicGame;
+    LogicMenu _logicMenu;
+
+    GameState _state;
 
 }
