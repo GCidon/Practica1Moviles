@@ -1,7 +1,7 @@
 package gdv.ohno.engine;
 
 public interface Graphics {
-    public Image newImage(String name);
+    public Image newImage(String name) throws Exception;
     public Font newFont(String filename, float size, boolean isBold)throws Exception;
     public void setFont(Font font);
 
@@ -12,7 +12,11 @@ public interface Graphics {
     public void save();
     public void restore();
 
-    public void drawImage(Image image);
+    //x, y posiciones originales - x2, y2 posicion esquina contraria
+    public void drawImage(Image image, int x, int y, int x2, int y2);
+
+    //dx, dy, dx2, dy2 posiciones en pantalla - sx, sy, sx2, sy2 posiciones de imagen
+    public void drawFramedImage(Image image, int dx, int dy, int dx2, int dy2, int sx, int sy, int sx2, int sy2);
 
     public void setColor(int color);
 

@@ -83,17 +83,25 @@ public class AndroidGraphics implements Graphics {
     }
 
     public Image newImage(String name) {
-        //to do
-        return null;
+        return new AndroidImage(name);
     }
 
-    public void drawImage(Image image) {
-        //to do
+    public void drawImage(Image image, int x, int y, int x2, int y2) {
+        AndroidImage img = (AndroidImage)image;
+        Rect r = new Rect(x, y, x2, y2);
+        Rect d = new Rect(0,0, img.getWidth(), img.getHeight());
+        _c.drawBitmap(img.getImage(), r, d, _p);
     }
 
-    //drawOval(x, y, radio, radio)
+    public void drawFramedImage(Image image, int dx, int dy, int dx2, int dy2, int sx, int sy, int sx2, int sy2) {
+        AndroidImage img = (AndroidImage)image;
+        Rect r = new Rect(dx, dy, dx2, dy2);
+        Rect d = new Rect(sx,sy, sx2, sy2);
+        _c.drawBitmap(img.getImage(), r, d, _p);
+    }
+
     public void fillCircle(int x, int y, int r) {
-        //to do
+        _c.drawCircle(x, y, r, _p);
     }
 
     public float getWidth() {

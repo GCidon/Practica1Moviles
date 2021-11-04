@@ -8,6 +8,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import java.awt.geom.AffineTransform;
+import java.io.IOException;
 import java.io.InputStream;
 
 import javax.swing.JFrame;
@@ -92,14 +93,20 @@ public class PCGraphics implements Graphics {
     }
 
     @Override
-    public Image newImage(String name) {
-        //to do
-        return null;
+    public Image newImage(String name) throws Exception {
+        return new PCImage(name);
     }
 
     @Override
-    public void drawImage(Image image) {
-        //to do
+    public void drawImage(Image image, int x, int y, int x2, int y2) {
+        PCImage img = (PCImage)image;
+        _graphics.drawImage(img.getImage(), x, y, x2, y2, null);
+    }
+
+    @Override
+    public void drawFramedImage(Image image, int dx, int dy, int dx2, int dy2, int sx, int sy, int sx2, int sy2) {
+        PCImage img = (PCImage)image;
+        _graphics.drawImage(img.getImage(), dx, dy, dx2, dy2, sx, sy, sx2, sy2, null);
     }
 
     public float getWidth() {

@@ -1,20 +1,38 @@
 package gdv.ohno.pcengine;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 import gdv.ohno.engine.Image;
 
 public class PCImage implements Image {
-    //to do
-    public PCImage(String name) {
 
+    public PCImage(String name) throws Exception {
+        _image = null;
+        try {
+            _image = ImageIO.read(new File("assets/"+name));
+        } catch (IOException e) {
+            System.err.println("Error cargando la imagen: " + e);
+            return;
+        }
     }
 
     @Override
     public int getWidth() {
-        return 0;
+        return _image.getWidth();
     }
 
     @Override
     public int getHeight() {
-        return 0;
+        return _image.getHeight();
     }
+
+    public BufferedImage getImage() {
+        return _image;
+    }
+
+    private BufferedImage _image;
 }

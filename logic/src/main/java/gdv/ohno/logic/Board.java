@@ -86,7 +86,7 @@ public class Board {
         int cellWidth = _windowWidth/_size;
         for(int i = 0; i < _board.length; i++) {
             for(int j = 0; j < _board[i].length; j++) {
-                _board[i][j] = new Cell(i*cellWidth-(_windowWidth/2),j*cellWidth-(_windowWidth/2), cellWidth, cellWidth, 1, Cell.Type.Empty);
+                _board[i][j] = new Cell(i*cellWidth-(_windowWidth/2),j*cellWidth-(_windowWidth/2), cellWidth, cellWidth, j, Cell.Type.Empty);
                 _board[i][j].setLogic(_logic);
             }
         }
@@ -153,6 +153,8 @@ public class Board {
             }
         }
     }
+
+    public int getSize() { return _size; }
 
     public void setLogic(Logic logic) {_logic = logic;}
 
