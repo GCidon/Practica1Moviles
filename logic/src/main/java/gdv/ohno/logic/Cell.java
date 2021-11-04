@@ -4,23 +4,35 @@ import gdv.ohno.engine.Graphics;
 import gdv.ohno.engine.Input;
 
 public class Cell extends GameObject {
-    enum Type {Empty,Blue,Red,FixedBlue,FixedRed}
-    private int[] Colors = {0xFFDCDCDC, 0xFF0000FF, 0xFFFF0000, 0xFF0000FF, 0xFFFF0000};
+    enum Type {Empty, Blue, Red, FixedBlue, FixedRed}
+
+    private int[] Colors = {0xEEEEEE, 0x45CCFF, 0xFF3C54, 0x45CCFF, 0xFF3C54};
+
     public Cell(int x, int y, int w, int h, int n, Type type) {
         super(x, y, w, h);
-        _n=n;
-        _type=type;
+        _n = n;
+        _type = type;
     }
 
-    public int getNumber(){return _n;}
-    public Type getType(){return _type;}
-    public void setNumber(int n){
-        _n=n;
+    public int getNumber() {
+        return _n;
     }
-    public void setType(Type t){
-        _type=t;
+
+    public Type getType() {
+        return _type;
     }
-    public void setLogic(Logic logic) { _logic = logic; }
+
+    public void setNumber(int n) {
+        _n = n;
+    }
+
+    public void setType(Type t) {
+        _type = t;
+    }
+
+    public void setLogic(Logic logic) {
+        _logic = logic;
+    }
 
     public void update(float deltaTime) {
 
@@ -28,7 +40,7 @@ public class Cell extends GameObject {
 
     public void render(Graphics g) {
         g.setColor(Colors[_type.ordinal()]);
-        g.fillCircle((int)_x, (int)_y, (int)_w);
+        g.fillCircle((int) _x, (int) _y, (int) _w);
 
         if(_n!=0) {
             g.setColor(0xFF000000);
@@ -38,17 +50,17 @@ public class Cell extends GameObject {
 
     public void handleInput(Input.TouchEvent e) throws Exception {
         switch (_type) {
-                case Empty:
-                    _type = Type.Blue;
-                    break;
-                case Blue:
-                    _type = Type.Red;
-                    break;
-                case Red:
-                    _type = Type.Empty;
-                    break;
-                default:
-                    break;
+            case Empty:
+                _type = Type.Blue;
+                break;
+            case Blue:
+                _type = Type.Red;
+                break;
+            case Red:
+                _type = Type.Empty;
+                break;
+            default:
+                break;
         }
     }
 
@@ -56,3 +68,5 @@ public class Cell extends GameObject {
     private Type _type;
     private Logic _logic;
 }
+
+
