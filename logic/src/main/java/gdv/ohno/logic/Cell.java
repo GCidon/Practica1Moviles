@@ -8,8 +8,10 @@ public class Cell extends GameObject {
 
     private int[] Colors = {0xEEEEEE, 0x45CCFF, 0xFF3C54, 0x45CCFF, 0xFF3C54};
 
-    public Cell(int x, int y, int w, int h, int n, Type type) {
+    public Cell(int x, int y, int w, int h, int n, Type type, Vector2D pos) {
         super(x, y, w, h);
+
+        _pos = pos;
         _n = n;
         _type = type;
     }
@@ -20,6 +22,14 @@ public class Cell extends GameObject {
 
     public Type getType() {
         return _type;
+    }
+
+    public Vector2D getPos() {
+        return _pos;
+    }
+
+    public void setPos(Vector2D pos) {
+        _pos = pos;
     }
 
     public void setNumber(int n) {
@@ -42,7 +52,7 @@ public class Cell extends GameObject {
         g.setColor(Colors[_type.ordinal()]);
         g.fillCircle((int) _x, (int) _y, (int) _w);
 
-        if(_n != 0 && _type == Type.FixedBlue) {
+        if (_n != 0 && _type == Type.FixedBlue) {
             g.setColor(0xFF000000);
             g.drawText(Integer.toString(_n), (int) (_x + _w / 3), (int) (-_y - _h / 3));
         }
@@ -67,7 +77,7 @@ public class Cell extends GameObject {
     private int _n;
     private Type _type;
     private Logic _logic;
-    private boolean _isNumber;
+    private Vector2D _pos;
 }
 
 

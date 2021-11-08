@@ -25,9 +25,12 @@ public class LogicGame {
         _images[1] = _engine.getGraphics().newImage("sprites/close.png");
         _images[2] = _engine.getGraphics().newImage("sprites/history.png");
 
-        _board = new Board(_boardSize, (int)_engine.getGraphics().getWidth());
+        _board = new Board(_boardSize, (int) _engine.getGraphics().getWidth());
         _board.setLogic(_logica);
-        _board.GenerateBoard();
+        //_board.GenerateBoard();
+        _manager = new HintManager(_board);
+
+        _manager.solve();
     }
 
     public void render(Graphics g) {
@@ -49,7 +52,7 @@ public class LogicGame {
     }
 
     public void handleInput(List<Input.TouchEvent> te) throws Exception {
-        for(Input.TouchEvent e: te) {
+        for (Input.TouchEvent e : te) {
             _board.handleInput(e);
         }
     }
@@ -57,6 +60,7 @@ public class LogicGame {
     public void getEngine(Engine engine) {
         _engine = engine;
     }
+
     public Board getBoard() {
         return _board;
     }
@@ -67,6 +71,7 @@ public class LogicGame {
     Font _fonts[] = new Font[2];
     Image _images[] = new Image[5];
     Board _board;
+    HintManager _manager;
 
     Engine _engine;
     Logic _logica;
