@@ -1,5 +1,10 @@
 package gdv.ohno.logic;
 
+import org.graalvm.compiler.hotspot.nodes.aot.PluginFactory_EncodedSymbolNode;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
 import java.util.Vector;
 
 import gdv.ohno.engine.Graphics;
@@ -11,92 +16,77 @@ public class Board {
         _size = size;
         _windowWidth = width;
         _inix = _iniy = -_windowWidth / 2;
+        _completed = 0;
     }
 
-    public int NextTo(int x, int y) {
-        int next = 0;
-        int left = x - 1, right = x + 1, up = y - 1, down = y + 1;
-
-        boolean leftC = true, rightC = true, upC = true, downC = true;
-        while (left >= 0 && leftC) {
-            switch (_board[left][y].getType()) {
-                case Blue:
-                case FixedBlue:
-                    next++;
-                    left--;
-                    break;
-                case Empty:
-                case Red:
-                case FixedRed:
-                    leftC = false;
-                    break;
-            }
-        }
-        while (right < _size && rightC) {
-            switch (_board[right][y].getType()) {
-                case Blue:
-                case FixedBlue:
-                    next++;
-                    right++;
-                    break;
-                case Empty:
-                case Red:
-                case FixedRed:
-                    rightC = false;
-                    break;
-            }
-        }
-        while (up >= 0 && upC) {
-            switch (_board[x][up].getType()) {
-                case Blue:
-                case FixedBlue:
-                    next++;
-                    up--;
-                    break;
-                case Empty:
-                case Red:
-                case FixedRed:
-                    upC = false;
-                    break;
-            }
-        }
-        while (down < _size && downC) {
-            switch (_board[x][down].getType()) {
-                case Blue:
-                case FixedBlue:
-                    next++;
-                    down++;
-                    break;
-                case Empty:
-                case Red:
-                case FixedRed:
-                    downC = false;
-                    break;
-            }
-        }
-
-        return next;
-    }
-    public void GenerateBoard(){
+    public void GenerateBoard() {
         int cellWidth = _windowWidth/_size;
-        for(int i = 0; i < _board.length; i++) {
-            for(int j = 0; j < _board[i].length; j++) {
-                _board[i][j] = new Cell(i*cellWidth-(_windowWidth/2),j*cellWidth-(_windowWidth/2), cellWidth, cellWidth, j, Cell.Type.Empty);
-                _board[i][j].setLogic(_logic);
+
+        ArrayList<Integer> movida = new ArrayList<Integer>();
+        for(int i = 0; i < _size*_size; i++) {
+            movida.add(i);
+        }
+        Collections.shuffle(movida);
+        int minRed = (_size*_size) / 3;
+        int posx, posy;
+        int boardx, boardy;
+        for(int i = 0; i < minRed; i++) {
+            boardx = movida.get(i)/_size;
+            boardy = movida.get(i)%_size;
+            posx = boardx*cellWidth-(_windowWidth/2);
+            posy = boardy*cellWidth-(_windowWidth/2);
+            _board[boardx][boardy] = new Cell(posx, posy, cellWidth, cellWidth, 0, Cell.Type.Red);
+            _board[boardx][boardy].setLogic(_logic);
+        }
+        for(int i = minRed; i < movida.size(); i++) {
+            boardx = movida.get(i)/_size;
+            boardy = movida.get(i)%_size;
+            posx = boardx*cellWidth-(_windowWidth/2);
+            posy = boardy*cellWidth-(_windowWidth/2);
+            _board[boardx][boardy] = new Cell(posx, posy, cellWidth, cellWidth, 0, Cell.Type.Blue);
+            _board[boardx][boardy].setLogic(_logic);
+        }
+
+        int nAlrededor;
+        Random rnd = new Random();
+        for (int j = 0; j < _size; j++) {
+            for (int i = 0; i < _size; i++) {
+                if(_board[i][j].getType() == Cell.Type.Blue) {
+                    nAlrededor = countAdjacent(i, j);
+                    if(nAlrededor==0) {
+                        _board[i][j].setType(Cell.Type.Red);
+                    } else {
+                        int rand = rnd.nextInt(3);
+                        if(rand == 1) {
+                            _board[i][j].setType(Cell.Type.FixedBlue);
+                            _board[i][j].setNumber(nAlrededor);
+                            _completed+=1;
+                        }
+                    }
+                }
+                else {
+                    int rand = rnd.nextInt(3);
+                    if(rand == 1) {
+                        _board[i][j].setType(Cell.Type.FixedRed);
+                        _completed+=1;
+                    }
+                }
             }
         }
 
-        _board[0][2] = new Cell(0 * cellWidth - (_windowWidth / 2), 2 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 0, Cell.Type.Red);
-        _board[1][3] = new Cell(1 * cellWidth - (_windowWidth / 2), 3 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 0, Cell.Type.Red);
-        _board[1][1] = new Cell(1 * cellWidth - (_windowWidth / 2), 1 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 1, Cell.Type.Blue);
-        _board[2][0] = new Cell(2 * cellWidth - (_windowWidth / 2), 0 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 2, Cell.Type.Blue);
-        _board[3][0] = new Cell(3 * cellWidth - (_windowWidth / 2), 0 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 4, Cell.Type.Blue);
-        _board[2][2] = new Cell(2 * cellWidth - (_windowWidth / 2), 2 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 2, Cell.Type.Blue);
+        for (int j = 0; j < _size; j++) {
+            for (int i = 0; i < _size; i++) {
+                if(_board[i][j].getType() != Cell.Type.FixedBlue && _board[i][j].getType() != Cell.Type.FixedRed){
+                    _board[i][j].setType(Cell.Type.Empty);
+                }
+            }
+        }
+
     }
 
     public void render(Graphics g) {
         for (int i = 0; i < _board.length; i++) {
-            for (int j = 0; j < _board[i].length; j++) {
+            for (int j = 0; j < _board.length; j++) {
                 _board[i][j].render(g);
             }
         }
@@ -119,26 +109,24 @@ public class Board {
 
     public boolean CheckWin() {
         int n = 0, next = 0;
-        for (int i = 0; i < _size; i++) {
-            for (int j = 0; j < _size; j++) {
+        for (int j = 0; j < _size; j++) {
+            for (int i = 0; i < _size; i++) {
                 n = _board[i][j].getNumber();
                 if (n > 0) {
-                    next = NextTo(i, j);
+                    next = countAdjacent(i, j);
                     if (next != n)
                         return false;
-
                 }
-
             }
         }
         return true;
     }
 
     public void fillingWin() {
-        for (int i = 0; i < _size; i++) {
-            for (int j = 0; j < _size; j++) {
+        for (int j = 0; j < _size; j++) {
+            for (int i = 0; i < _size; i++) {
                 if (_board[i][j].getType() == Cell.Type.Blue) {
-                    _board[i][j].setNumber(NextTo(i, j));
+                    _board[i][j].setNumber(countAdjacent(i, j));
                     _board[i][j].setType(Cell.Type.FixedBlue);
 
                 } else if (_board[i][j].getType() == Cell.Type.Empty || _board[i][j].getType() == Cell.Type.Red) {
@@ -155,22 +143,32 @@ public class Board {
      *  It goes recursively through all the board in the specified direction.
      * @param pos   the initial pos.
      * @param dir   the direction to path in the board.
-     * @param type  the cell type to look for.
      *
      * @return  the total count.
      */
-    public int countAdjacent(Vector2D pos, Vector2D dir, Cell.Type type) {
+    int count(Vector2D pos, Vector2D dir) {
         int n = 0;
 
         Vector2D newPos = Vector2D.sum(pos, dir);
         if (!outOfBoard(newPos)) {
-            if (_board[newPos.x][newPos.y].getType() == type) {
+            if (_board[newPos.x][newPos.y].getType() == Cell.Type.Blue || _board[newPos.x][newPos.y].getType() == Cell.Type.FixedBlue) {
                 n++;
-                n += countAdjacent(newPos, dir, type);
+                n += count(newPos, dir);
             }
         }
 
         return n;
+    }
+
+    int countAdjacent(int x, int y) {
+        int res = 0;
+
+        res += count(new Vector2D(x, y), new Vector2D(0,1));
+        res += count(new Vector2D(x, y), new Vector2D(1,0));
+        res += count(new Vector2D(x, y), new Vector2D(-1,0));
+        res += count(new Vector2D(x, y), new Vector2D(0,-1));
+
+        return res;
     }
 
     public Cell[][] getBoard() {
@@ -189,6 +187,8 @@ public class Board {
 
     private int _inix;
     private int _iniy;
+
+    int _completed;
 
     private Logic _logic;
     private Cell[][] _board;

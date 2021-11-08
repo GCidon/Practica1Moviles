@@ -44,7 +44,7 @@ public class Logic implements gdv.ohno.engine.Logic {
         _engine.getGraphics().setBaseWidth(400);
         _engine.getGraphics().setBaseHeight(600);
 
-        startMenu();
+        startGame(4);
     }
 
     public void startMenu() throws Exception {

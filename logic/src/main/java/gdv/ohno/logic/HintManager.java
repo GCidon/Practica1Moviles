@@ -29,10 +29,7 @@ public class HintManager {
         int count = 0;
 
         // contar las celdas azules adyacentes en todas las direcciones
-        count += _board.countAdjacent(new Vector2D(c.getX(), c.getY()), _dirs[0], Cell.Type.Blue);
-        count += _board.countAdjacent(new Vector2D(c.getX(), c.getY()), _dirs[1], Cell.Type.Blue);
-        count += _board.countAdjacent(new Vector2D(c.getX(), c.getY()), _dirs[2], Cell.Type.Blue);
-        count += _board.countAdjacent(new Vector2D(c.getX(), c.getY()), _dirs[3], Cell.Type.Blue);
+        count += _board.countAdjacent(c.getX(), c.getY());
 
         if (count == c.getNumber())
             return true;
