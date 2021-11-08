@@ -67,6 +67,7 @@ public class Cell extends GameObject {
     private int _n;
     private Type _type;
     private Logic _logic;
+    private boolean _isNumber;
 }
 
 
