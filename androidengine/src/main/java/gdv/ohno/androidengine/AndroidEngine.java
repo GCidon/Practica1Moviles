@@ -60,27 +60,31 @@ public class AndroidEngine implements Engine, Runnable {
         _input = new AndroidInput();
         _ag = new AndroidGraphics();
         _ag.getContext(context);
+        canvas = _holder.lockCanvas();
+        _ag.setCanvas(canvas);
+        _locked = true;
         logica.init();
         _running = true;
         double lastTime = System.nanoTime();
         _sv.setOnTouchListener(_input._listener);
         while (_running) {
-            canvas = _holder.lockCanvas();
-            _ag.setCanvas(canvas);
+            if (!_locked) {
+                canvas = _holder.lockCanvas();
+                _ag.setCanvas(canvas);
+                _locked = true;
+            }
             double currentTime = System.nanoTime();
             double deltaTime = (currentTime - lastTime) / 1e9;
 
             update(deltaTime);
             handleInput();
 
-            while (!_holder.getSurface().isValid())
-                ;
+            while (!_holder.getSurface().isValid());
             try {
-                //Realizamos esta comprovación ya que es posible que en alguna ocasion que la app se inicialice muy rapido y realice el render antes de haber finalizado el canvas.
-                //Nos parecio una mejor alternativa a hacer un wait().
                 if (canvas != null) {
                     render(_ag);
                     _holder.unlockCanvasAndPost(canvas);
+                    _locked = false;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -146,6 +150,7 @@ public class AndroidEngine implements Engine, Runnable {
     Thread _renderThread;
 
     boolean _running = false;
+    boolean _locked = false;
 
     Canvas canvas;
     Context context;

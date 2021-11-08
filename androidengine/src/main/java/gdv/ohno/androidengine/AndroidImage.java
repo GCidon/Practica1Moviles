@@ -4,14 +4,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import java.io.File;
-import java.io.IOException;
 
 import gdv.ohno.engine.Image;
 
 public class AndroidImage implements Image {
 
     public AndroidImage(String name) {
-        _image = null;
         _image = BitmapFactory.decodeFile(name);
     }
 
