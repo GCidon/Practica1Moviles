@@ -42,8 +42,7 @@ public class PCEngine implements Engine {
 
 
     public void render(Graphics g) throws Exception {
-        //calculateSize
-        _graphics.clear(0xFF000000);
+        _graphics.clear(0xFFFFFFFF);
         _graphics.translate((int) g.getWidth() / 2, (int) g.getHeight() / 2);
         _graphics.scale(g.calculateSize());
         logica.render(g);

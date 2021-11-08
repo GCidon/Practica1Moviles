@@ -40,7 +40,7 @@ public class PCGraphics implements Graphics {
 
     public void clear(int color) {
         setColor(color);
-        fillRect((int)-getWidth()/2, (int)-getHeight()/2, (int) getWidth(), (int) getHeight());
+        fillRect((int)-getWidth(), (int)-getHeight(), (int) getWidth(), (int) getHeight());
     }
 
     public void translate(int x, int y) {
@@ -80,11 +80,9 @@ public class PCGraphics implements Graphics {
     }
 
     public void drawText(String text, int x, int y) {
-
         ((Graphics2D) _graphics).scale(1, -1);
         _graphics.drawString(text, x, y);
         ((Graphics2D) _graphics).scale(1, -1);
-
     }
 
     @Override
@@ -109,9 +107,7 @@ public class PCGraphics implements Graphics {
         _graphics.drawImage(img.getImage(), dx, dy, dx2, dy2, sx, sy, sx2, sy2, null);
     }
 
-    public float getWidth() {
-        return _frame.getWidth();
-    }
+    public float getWidth() { return _frame.getWidth(); }
 
     public float getHeight() {
         return _frame.getHeight();
