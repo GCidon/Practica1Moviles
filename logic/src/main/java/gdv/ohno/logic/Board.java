@@ -17,33 +17,35 @@ public class Board {
         _windowWidth = width;
         _inix = _iniy = -_windowWidth / 2;
         _completed = 0;
+
+        pruebas();
     }
 
     public void GenerateBoard() {
-        int cellWidth = _windowWidth/_size;
+        int cellWidth = _windowWidth / _size;
 
         ArrayList<Integer> movida = new ArrayList<Integer>();
-        for(int i = 0; i < _size*_size; i++) {
+        for (int i = 0; i < _size * _size; i++) {
             movida.add(i);
         }
         Collections.shuffle(movida);
-        int minRed = (_size*_size) / 3;
+        int minRed = (_size * _size) / 3;
         int posx, posy;
         int boardx, boardy;
-        for(int i = 0; i < minRed; i++) {
-            boardx = movida.get(i)/_size;
-            boardy = movida.get(i)%_size;
-            posx = boardx*cellWidth-(_windowWidth/2);
-            posy = boardy*cellWidth-(_windowWidth/2);
-            _board[boardx][boardy] = new Cell(posx, posy, cellWidth, cellWidth, 0, Cell.Type.Red);
+        for (int i = 0; i < minRed; i++) {
+            boardx = movida.get(i) / _size;
+            boardy = movida.get(i) % _size;
+            posx = boardx * cellWidth - (_windowWidth / 2);
+            posy = boardy * cellWidth - (_windowWidth / 2);
+            _board[boardx][boardy] = new Cell(posx, posy, cellWidth, cellWidth, 0, Cell.Type.Red, new Vector2D(boardx, boardy));
             _board[boardx][boardy].setLogic(_logic);
         }
-        for(int i = minRed; i < movida.size(); i++) {
-            boardx = movida.get(i)/_size;
-            boardy = movida.get(i)%_size;
-            posx = boardx*cellWidth-(_windowWidth/2);
-            posy = boardy*cellWidth-(_windowWidth/2);
-            _board[boardx][boardy] = new Cell(posx, posy, cellWidth, cellWidth, 0, Cell.Type.Blue);
+        for (int i = minRed; i < movida.size(); i++) {
+            boardx = movida.get(i) / _size;
+            boardy = movida.get(i) % _size;
+            posx = boardx * cellWidth - (_windowWidth / 2);
+            posy = boardy * cellWidth - (_windowWidth / 2);
+            _board[boardx][boardy] = new Cell(posx, posy, cellWidth, cellWidth, 0, Cell.Type.Blue, new Vector2D(boardx, boardy));
             _board[boardx][boardy].setLogic(_logic);
         }
 
@@ -51,24 +53,23 @@ public class Board {
         Random rnd = new Random();
         for (int j = 0; j < _size; j++) {
             for (int i = 0; i < _size; i++) {
-                if(_board[i][j].getType() == Cell.Type.Blue) {
+                if (_board[i][j].getType() == Cell.Type.Blue) {
                     nAlrededor = countAdjacent(i, j);
-                    if(nAlrededor==0) {
+                    if (nAlrededor == 0) {
                         _board[i][j].setType(Cell.Type.Red);
                     } else {
                         int rand = rnd.nextInt(3);
-                        if(rand == 1) {
+                        if (rand == 1) {
                             _board[i][j].setType(Cell.Type.FixedBlue);
                             _board[i][j].setNumber(nAlrededor);
-                            _completed+=1;
+                            _completed += 1;
                         }
                     }
-                }
-                else {
+                } else {
                     int rand = rnd.nextInt(3);
-                    if(rand == 1) {
+                    if (rand == 1) {
                         _board[i][j].setType(Cell.Type.FixedRed);
-                        _completed+=1;
+                        _completed += 1;
                     }
                 }
             }
@@ -76,7 +77,7 @@ public class Board {
 
         for (int j = 0; j < _size; j++) {
             for (int i = 0; i < _size; i++) {
-                if(_board[i][j].getType() != Cell.Type.FixedBlue && _board[i][j].getType() != Cell.Type.FixedRed){
+                if (_board[i][j].getType() != Cell.Type.FixedBlue && _board[i][j].getType() != Cell.Type.FixedRed) {
                     _board[i][j].setType(Cell.Type.Empty);
                 }
             }
@@ -167,13 +168,14 @@ public class Board {
     int countAdjacent(int x, int y) {
         int res = 0;
 
-        res += count(new Vector2D(x, y), new Vector2D(0,1));
-        res += count(new Vector2D(x, y), new Vector2D(1,0));
-        res += count(new Vector2D(x, y), new Vector2D(-1,0));
-        res += count(new Vector2D(x, y), new Vector2D(0,-1));
+        res += count(new Vector2D(x, y), new Vector2D(0, 1));
+        res += count(new Vector2D(x, y), new Vector2D(1, 0));
+        res += count(new Vector2D(x, y), new Vector2D(-1, 0));
+        res += count(new Vector2D(x, y), new Vector2D(0, -1));
 
         return res;
     }
+
     /**
      * Looks for the cell of the given type in the specified direction
      *
@@ -226,10 +228,29 @@ public class Board {
         _logic = logic;
     }
 
-    private boolean outOfBoard(Vector2D pos) {
+    public boolean outOfBoard(Vector2D pos) {
         if (pos.x < 0 || pos.x >= _size || pos.y < 0 || pos.y >= _size)
             return true;
         else return false;
+    }
+
+    public void setBoard(Cell[][] board) {
+        _board = board;
+    }
+
+    private void pruebas() {
+        int cellWidth = _windowWidth / _size;
+        for (int i = 0; i < _board.length; i++) {
+            for (int j = 0; j < _board[i].length; j++) {
+                _board[i][j] = new Cell(i * cellWidth - (_windowWidth / 2), j * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 0, Cell.Type.Empty, new Vector2D(i, j));
+            }
+        }
+        _board[0][1] = new Cell(0 * cellWidth - (_windowWidth / 2), 1 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 0, Cell.Type.Red, new Vector2D(0, 1));
+        _board[1][0] = new Cell(1 * cellWidth - (_windowWidth / 2), 0 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 0, Cell.Type.Red, new Vector2D(1, 0));
+        _board[1][2] = new Cell(1 * cellWidth - (_windowWidth / 2), 2 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 1, Cell.Type.Blue, new Vector2D(1, 2));
+        _board[2][1] = new Cell(2 * cellWidth - (_windowWidth / 2), 1 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 2, Cell.Type.Blue, new Vector2D(2, 1));
+        _board[3][3] = new Cell(3 * cellWidth - (_windowWidth / 2), 3 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 4, Cell.Type.Blue, new Vector2D(3, 3));
+        _board[2][3] = new Cell(2 * cellWidth - (_windowWidth / 2), 3 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 2, Cell.Type.Blue, new Vector2D(2, 3));
     }
 
     private int _inix;
