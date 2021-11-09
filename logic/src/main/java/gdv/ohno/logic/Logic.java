@@ -23,7 +23,7 @@ public class Logic implements gdv.ohno.engine.Logic {
                 _logicGame.setEnd(true);
             }
         }
-        else {
+        else if(_state == GameState.LEVEL){
             if(_timer > _transitionTime) {
                 startMenu();
                 _logicMenu.setSelecting(true);
@@ -85,7 +85,9 @@ public class Logic implements gdv.ohno.engine.Logic {
         }
     }
 
-    void selectLevel() { _logicMenu._selecting = true; }
+    void selectLevel() {
+        _logicMenu._selecting = true;
+    }
 
     void undo() { _logicGame.getBoard().undoMove(); }
 

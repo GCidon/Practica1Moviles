@@ -10,9 +10,13 @@ import gdv.ohno.engine.Image;
 public class AndroidImage implements Image {
 
     public AndroidImage(String name) {
-        _image = BitmapFactory.decodeFile(name);
+        File image = new File(name);
+        if(image.exists()) {
+            _image = BitmapFactory.decodeFile(name);
+        } else {
+            System.out.println("Cagaste");
+        }
     }
-
 
     @Override
     public int getWidth() {

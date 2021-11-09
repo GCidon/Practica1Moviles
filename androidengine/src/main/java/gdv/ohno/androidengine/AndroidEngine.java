@@ -2,13 +2,8 @@ package gdv.ohno.androidengine;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
-
-import java.io.IOException;
-import java.io.InputStream;
 
 import gdv.ohno.engine.Engine;
 import gdv.ohno.engine.Graphics;
@@ -33,21 +28,13 @@ public class AndroidEngine implements Engine, Runnable {
         return null;
     }
 
-    public InputStream openInputStream(String filename) throws IOException {
-
-        return context.getAssets().open(filename);
-    }
-
-    public void update(double deltaTime) {
+    public void update(double deltaTime) throws Exception {
         logica.update((float) deltaTime);
     }
 
-    public void handleInput() throws Exception {
-        logica.handleInput(_input.getTouchEvents());
-    }
+    public void handleInput() throws Exception { logica.handleInput(_input.getTouchEvents()); }
 
     public void render(Graphics g) throws Exception {
-        //calculateSize
         _ag.clear(0xFF000000);
         _ag.translate((int) g.getWidth() / 2, (int) g.getHeight() / 2);
         _ag.scale(g.calculateSize());
@@ -56,23 +43,18 @@ public class AndroidEngine implements Engine, Runnable {
 
     //Bucle principal
     public boolean running() throws Exception {
-        //Inicializamos varialbes y clases que usaremos
+        //Inicializamos variables y clases que usaremos
         _input = new AndroidInput();
         _ag = new AndroidGraphics();
         _ag.getContext(context);
-        canvas = _holder.lockCanvas();
-        _ag.setCanvas(canvas);
-        _locked = true;
         logica.init();
         _running = true;
         double lastTime = System.nanoTime();
         _sv.setOnTouchListener(_input._listener);
         while (_running) {
-            if (!_locked) {
-                canvas = _holder.lockCanvas();
-                _ag.setCanvas(canvas);
-                _locked = true;
-            }
+            canvas = _holder.lockCanvas();
+            _ag.setCanvas(canvas);
+
             double currentTime = System.nanoTime();
             double deltaTime = (currentTime - lastTime) / 1e9;
 
@@ -81,15 +63,14 @@ public class AndroidEngine implements Engine, Runnable {
 
             while (!_holder.getSurface().isValid());
             try {
-                if (canvas != null) {
+                if(canvas != null) {
                     render(_ag);
-                    _holder.unlockCanvasAndPost(canvas);
-                    _locked = false;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
+            _holder.unlockCanvasAndPost(canvas);
             lastTime = currentTime;
         }
 
@@ -103,7 +84,6 @@ public class AndroidEngine implements Engine, Runnable {
 
 
     @Override
-
     //Sistema de threads y ejecuta el runnning()
     public void run() {
 
@@ -150,7 +130,6 @@ public class AndroidEngine implements Engine, Runnable {
     Thread _renderThread;
 
     boolean _running = false;
-    boolean _locked = false;
 
     Canvas canvas;
     Context context;

@@ -59,7 +59,7 @@ public class LogicMenu {
             g.save();
             g.scale(-1);
             g.rotate(180);
-            g.drawImage(_images[1], -15, 190, 50, 75);
+            //g.drawImage(_images[1], -15, 190, 50, 75);
             g.restore();
         }
         //seleccion de tamaño de tablero
@@ -86,7 +86,7 @@ public class LogicMenu {
             g.save();
             g.scale(-1);
             g.rotate(180);
-            g.drawImage(_images[0], -15, 190, 25, 25);
+            //g.drawImage(_images[0], -15, 190, 25, 25);
             g.restore();
         }
 
@@ -122,5 +122,5 @@ public class LogicMenu {
     Font _fonts[] = new Font[4];
     Image _images[] = new Image[5];
 
-    boolean _selecting;
+    boolean _selecting = false;
 }

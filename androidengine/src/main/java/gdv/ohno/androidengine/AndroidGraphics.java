@@ -75,10 +75,14 @@ public class AndroidGraphics implements Graphics {
         _c.drawRect(r, _p);
     }
 
+    public void fillCircle(int x, int y, int r) {
+        _c.drawCircle(x, y, r, _p);
+    }
+
     @Override
     public void drawText(String text, int x, int y) {
         _c.scale(1, -1);
-        _c.drawText(text, (int) x, y, _p);
+        _c.drawText(text, x, y, _p);
         _c.scale(1, -1);
     }
 
@@ -100,17 +104,11 @@ public class AndroidGraphics implements Graphics {
         _c.drawBitmap(img.getImage(), r, d, _p);
     }
 
-    public void fillCircle(int x, int y, int r) {
-        _c.drawCircle(x, y, r, _p);
-    }
-
     public float getWidth() {
-        int aux = _c.getWidth();
         return _c.getWidth();
     }
 
     public float getHeight() {
-        int aux = _c.getHeight();
         return _c.getHeight();
     }
 
@@ -145,12 +143,9 @@ public class AndroidGraphics implements Graphics {
         height_ = h;
     }
 
-
     public void getContext(Context _context) {
         context = _context;
     }
-
-
 
     float width_;
     float height_;
