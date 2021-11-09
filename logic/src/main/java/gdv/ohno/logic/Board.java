@@ -195,10 +195,26 @@ public class Board {
         return res;
     }
 
-    //comprueba si la casilla indicada no tiene azules adyacentes, y por lo tanto, tiene que ser roja
+    //comprueba si la casilla indicada no ve azules fijas, y por lo tanto, tiene que ser roja
     boolean checkRed(int x, int y) {
-        if(countAdjacent(x, y) == 0) return true;
-        else return false;
+
+        if(findFixedBlue(new Vector2D(x, y), new Vector2D(0, 1))) return false;
+        if(findFixedBlue(new Vector2D(x, y), new Vector2D(1, 0))) return false;
+        if(findFixedBlue(new Vector2D(x, y), new Vector2D(-1, 0))) return false;
+        if(findFixedBlue(new Vector2D(x, y), new Vector2D(0, -1))) return false;
+
+        return true;
+    }
+
+    //metodo recursivo para encontrar una casilla azul fija en una direccion dada
+    boolean findFixedBlue(Vector2D pos, Vector2D dir) {
+        Vector2D newPos = Vector2D.sum(pos, dir);
+        if (!outOfBoard(newPos)) {
+            if (_board[newPos.x][newPos.y].getType() == Cell.Type.FixedBlue) {
+                return true;
+            } else return findFixedBlue(newPos, dir);
+        }
+        return false;
     }
 
     /**

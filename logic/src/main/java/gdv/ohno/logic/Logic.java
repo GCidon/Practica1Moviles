@@ -85,13 +85,9 @@ public class Logic implements gdv.ohno.engine.Logic {
         }
     }
 
-    void selectLevel() {
-        _logicMenu._selecting = true;
-    }
+    void selectLevel() { _logicMenu._selecting = true; }
 
-    void undo() {
-        _logicGame.getBoard().undoMove();
-    }
+    void undo() { _logicGame.getBoard().undoMove(); }
 
     //diferentes acciones para botones
     public void processButton(String action) throws Exception {

@@ -24,13 +24,9 @@ public class Cell extends GameObject {
         return _type;
     }
 
-    public Vector2D getPos() {
-        return _pos;
-    }
+    public Vector2D getPos() { return _pos; }
 
-    public void setPos(Vector2D pos) {
-        _pos = pos;
-    }
+    public void setPos(Vector2D pos) { _pos = pos; }
 
     public void setNumber(int n) {
         _n = n;

@@ -34,7 +34,6 @@ public class LogicGame {
 
         _board = new Board(_boardSize, (int) _engine.getGraphics().getWidth());
         _board.setLogic(_logica);
-        //_board.GenerateBoard();
         _manager = new HintManager(_board);
 
         _manager.solve();
@@ -47,18 +46,22 @@ public class LogicGame {
         g.setColor(0xFF000000);
         String text;
         if(!_end) {
+            //texto de tamaño de tablero
             text = _board.getSize() + "x" + _board.getSize();
             g.drawText(text, (int) (-40), (int) (-220));
         } else {
+            //texto de ganar partida
             text = "Well done!";
             g.drawText(text, (int) (-120), (int) (-220));
         }
 
+        //texto de porcentaje
         g.setFont(_fonts[1]);
         g.setColor(0xFFC1C1C1);
         String completedText = _board.getCompletedPercentage() + "%";
         g.drawText(completedText, (int) (-10), (int) (215));
 
+        //imagenes de botones
         g.save();
         g.scale(-1);
         g.drawImage(_images[0], -75, -220, -50, -50);
@@ -66,9 +69,11 @@ public class LogicGame {
         g.drawImage(_images[2], 25, -220, -50, -50);
         g.restore();
 
+        //tablero
         g.setFont(_fonts[0]);
         _board.render(g);
-        for (int i = 0; i < _buttons.size(); i++) {
+
+        for(int i = 0; i < _buttons.size(); i++) {
             _buttons.get(i).render(g);
         }
     }
@@ -90,9 +95,7 @@ public class LogicGame {
         return _board;
     }
 
-    public void setEnd(boolean aux) {
-        _end = aux;
-    }
+    public void setEnd(boolean aux) { _end = aux; }
 
     int _boardSize;
 

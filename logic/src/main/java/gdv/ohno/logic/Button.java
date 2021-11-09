@@ -13,10 +13,6 @@ public class Button extends GameObject {
     public void render(Graphics g) {
         //Actualizamos la escala en cada frame para comprobar el tamaño de ventana nuevo (si lo hay)
         _scale = calculateSize();
-
-        //debug buttons
-        //g.setColor(0xFFFF0000);
-        //g.drawLine((int)_x, (int)_y, (int)(_x+_w), (int)(_y+_h));
     }
 
     public void update(float deltaTime) {

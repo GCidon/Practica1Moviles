@@ -61,8 +61,6 @@ public class LogicMenu {
             g.rotate(180);
             g.drawImage(_images[1], -15, 190, 50, 75);
             g.restore();
-
-
         }
         //seleccion de tamaño de tablero
         else {
@@ -72,6 +70,7 @@ public class LogicMenu {
             int inix = -120;
             int iniy = 0;
             int color = 0xFF000000;
+            //casillas de eleccion de tamaño de tablero
             for(int i = 0; i < 6; i++) {
                 if(i >= 3) iniy = 80;
                 if(i%2 == 0) color = 0x45CCFF;
@@ -93,7 +92,7 @@ public class LogicMenu {
 
         if(!_selecting) _buttons.get(0).render(g);
         else {
-            for (int i = 1; i < _buttons.size(); i++) {
+            for(int i = 1; i < _buttons.size(); i++) {
                 _buttons.get(i).render(g);
             }
         }
