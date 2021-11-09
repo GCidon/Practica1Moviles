@@ -59,6 +59,10 @@ public class Cell extends GameObject {
     }
 
     public void handleInput(Input.TouchEvent e) throws Exception {
+        changeColor();
+    }
+
+    public void changeColor() {
         switch (_type) {
             case Empty:
                 _type = Type.Blue;

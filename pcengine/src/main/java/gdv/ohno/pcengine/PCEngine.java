@@ -36,7 +36,7 @@ public class PCEngine implements Engine {
     }
 
 
-    public void update(double deltaTime) {
+    public void update(double deltaTime) throws Exception {
         logica.update((float) deltaTime);
     }
 

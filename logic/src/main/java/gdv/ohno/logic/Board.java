@@ -1,10 +1,12 @@
 package gdv.ohno.logic;
 
 import org.graalvm.compiler.hotspot.nodes.aot.PluginFactory_EncodedSymbolNode;
+import org.graalvm.compiler.lir.amd64.vector.AMD64VectorMove;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
+import java.util.Stack;
 import java.util.Vector;
 
 import gdv.ohno.engine.Graphics;
@@ -17,38 +19,44 @@ public class Board {
         _windowWidth = width;
         _inix = _iniy = -_windowWidth / 2;
         _completed = 0;
+        _moves = new Stack<Vector2D>();
 
-        pruebas();
+        GenerateBoard();
     }
 
     public void GenerateBoard() {
         int cellWidth = _windowWidth / _size;
 
-        ArrayList<Integer> movida = new ArrayList<Integer>();
+        //creamos una lista de numeros, indicando el indice de cada casilla
+        ArrayList<Integer> listaRnd = new ArrayList<Integer>();
         for (int i = 0; i < _size * _size; i++) {
-            movida.add(i);
+            listaRnd.add(i);
         }
-        Collections.shuffle(movida);
+        //aleatorizamos la lista
+        Collections.shuffle(listaRnd);
         int minRed = (_size * _size) / 3;
         int posx, posy;
         int boardx, boardy;
+        //rellenamos una porcion de la lista de casillas rojas (porcentaje indicado por minRed
         for (int i = 0; i < minRed; i++) {
-            boardx = movida.get(i) / _size;
-            boardy = movida.get(i) % _size;
+            boardx = listaRnd.get(i) / _size;
+            boardy = listaRnd.get(i) % _size;
             posx = boardx * cellWidth - (_windowWidth / 2);
             posy = boardy * cellWidth - (_windowWidth / 2);
             _board[boardx][boardy] = new Cell(posx, posy, cellWidth, cellWidth, 0, Cell.Type.Red, new Vector2D(boardx, boardy));
             _board[boardx][boardy].setLogic(_logic);
         }
-        for (int i = minRed; i < movida.size(); i++) {
-            boardx = movida.get(i) / _size;
-            boardy = movida.get(i) % _size;
+        //rellenamos el resto de casillas azules
+        for (int i = minRed; i < listaRnd.size(); i++) {
+            boardx = listaRnd.get(i) / _size;
+            boardy = listaRnd.get(i) % _size;
             posx = boardx * cellWidth - (_windowWidth / 2);
             posy = boardy * cellWidth - (_windowWidth / 2);
             _board[boardx][boardy] = new Cell(posx, posy, cellWidth, cellWidth, 0, Cell.Type.Blue, new Vector2D(boardx, boardy));
             _board[boardx][boardy].setLogic(_logic);
         }
-
+        //corregimos las casillas que deberian ser rojas y aleatoriamente asignamos las casillas
+        //fijas, tanto azules como rojas
         int nAlrededor;
         Random rnd = new Random();
         for (int j = 0; j < _size; j++) {
@@ -74,7 +82,7 @@ public class Board {
                 }
             }
         }
-
+        //cambiamos las casillas que no sean fijas por casillas vacias
         for (int j = 0; j < _size; j++) {
             for (int i = 0; i < _size; i++) {
                 if (_board[i][j].getType() != Cell.Type.FixedBlue && _board[i][j].getType() != Cell.Type.FixedRed) {
@@ -104,11 +112,18 @@ public class Board {
             int casillax = (int) (Math.abs(ratonx / (_windowWidth / _size)));
             int casillay = (int) (Math.abs(ratony / (_windowWidth / _size)));
 
+            if(_board[casillax][casillay].getType() != Cell.Type.FixedBlue && _board[casillax][casillay].getType() != Cell.Type.FixedRed)
+                _moves.push(new Vector2D(casillax, casillay));
+
             _board[casillax][casillay].handleInput(e);
+            //actualiza el contador de complecion
+            if(_board[casillax][casillay].getType() == Cell.Type.Empty) _completed-=1;
+            if(_board[casillax][casillay].getType() == Cell.Type.Blue) _completed+=1;
         }
     }
 
     public boolean CheckWin() {
+        //comprobamos si se corresponden los numeros de las casillas azules fijas a las casillas adyacentes
         int n = 0, next = 0;
         for (int j = 0; j < _size; j++) {
             for (int i = 0; i < _size; i++) {
@@ -116,6 +131,10 @@ public class Board {
                 if (n > 0) {
                     next = countAdjacent(i, j);
                     if (next != n)
+                        return false;
+                } else if(n==0) {
+                    //comprobacion de casillas que deberian ser rojas
+                    if(checkRed(i,j) && (_board[i][j].getType() != Cell.Type.Red && _board[i][j].getType() != Cell.Type.FixedRed))
                         return false;
                 }
             }
@@ -148,7 +167,6 @@ public class Board {
      *
      * @param pos  the initial pos.
      * @param dir  the direction to path in the board.
-     * @param type the cell type to look for.
      * @return the total count.
      */
     int count(Vector2D pos, Vector2D dir) {
@@ -165,6 +183,7 @@ public class Board {
         return n;
     }
 
+    //cuenta las casillas azules que ve la casilla indicada en las cuatro direcciones
     int countAdjacent(int x, int y) {
         int res = 0;
 
@@ -174,6 +193,12 @@ public class Board {
         res += count(new Vector2D(x, y), new Vector2D(0, -1));
 
         return res;
+    }
+
+    //comprueba si la casilla indicada no tiene azules adyacentes, y por lo tanto, tiene que ser roja
+    boolean checkRed(int x, int y) {
+        if(countAdjacent(x, y) == 0) return true;
+        else return false;
     }
 
     /**
@@ -253,26 +278,30 @@ public class Board {
         _board[2][3] = new Cell(2 * cellWidth - (_windowWidth / 2), 3 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 2, Cell.Type.Blue, new Vector2D(2, 3));
     }
 
+    public int getCompletedPercentage() {
+        return (_completed*100)/(_size*_size);
+    }
+
+    public void undoMove() {
+        if(!_moves.empty()) {
+            Vector2D move = _moves.pop();
+            _board[move.x][move.y].changeColor();
+            _board[move.x][move.y].changeColor();
+            if(_board[move.x][move.y].getType() == Cell.Type.Empty) _completed-=1;
+            if(_board[move.x][move.y].getType() == Cell.Type.Blue) _completed+=1;
+        }
+    }
+
     private int _inix;
     private int _iniy;
 
     int _completed;
 
+    Stack<Vector2D> _moves;
     private Logic _logic;
     private Cell[][] _board;
     private int _size;
     private int _windowWidth;
 }
 
-class Vector2D {
-    public int x, y;
 
-    public Vector2D(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    public static Vector2D sum(Vector2D a, Vector2D b) {
-        return new Vector2D(a.x + b.x, a.y + b.y);
-    }
-}
