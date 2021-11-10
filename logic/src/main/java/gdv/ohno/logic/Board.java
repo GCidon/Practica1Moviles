@@ -21,7 +21,8 @@ public class Board {
         _completed = 0;
         _moves = new Stack<Vector2D>();
 
-        GenerateBoard();
+        //GenerateBoard();
+        pruebas();
     }
 
     public void GenerateBoard() {
@@ -43,7 +44,7 @@ public class Board {
             boardy = listaRnd.get(i) % _size;
             posx = boardx * cellWidth - (_windowWidth / 2);
             posy = boardy * cellWidth - (_windowWidth / 2);
-            _board[boardx][boardy] = new Cell(posx, posy, cellWidth, cellWidth, 0, Cell.Type.Red, new Vector2D(boardx, boardy));
+            _board[boardx][boardy] = new Cell(posx, posy, cellWidth, cellWidth, 0, Cell.Type.Red, new Vector2D(boardx, boardy), false);
             _board[boardx][boardy].setLogic(_logic);
         }
         //rellenamos el resto de casillas azules
@@ -52,7 +53,7 @@ public class Board {
             boardy = listaRnd.get(i) % _size;
             posx = boardx * cellWidth - (_windowWidth / 2);
             posy = boardy * cellWidth - (_windowWidth / 2);
-            _board[boardx][boardy] = new Cell(posx, posy, cellWidth, cellWidth, 0, Cell.Type.Blue, new Vector2D(boardx, boardy));
+            _board[boardx][boardy] = new Cell(posx, posy, cellWidth, cellWidth, 0, Cell.Type.Blue, new Vector2D(boardx, boardy), false);
             _board[boardx][boardy].setLogic(_logic);
         }
         //corregimos las casillas que deberian ser rojas y aleatoriamente asignamos las casillas
@@ -68,7 +69,8 @@ public class Board {
                     } else {
                         int rand = rnd.nextInt(3);
                         if (rand == 1) {
-                            _board[i][j].setType(Cell.Type.FixedBlue);
+                            _board[i][j].setType(Cell.Type.Blue);
+                            _board[i][j].setFixed(true);
                             _board[i][j].setNumber(nAlrededor);
                             _completed += 1;
                         }
@@ -76,7 +78,8 @@ public class Board {
                 } else {
                     int rand = rnd.nextInt(3);
                     if (rand == 1) {
-                        _board[i][j].setType(Cell.Type.FixedRed);
+                        _board[i][j].setType(Cell.Type.Red);
+                        _board[i][j].setFixed(true);
                         _completed += 1;
                     }
                 }
@@ -85,7 +88,7 @@ public class Board {
         //cambiamos las casillas que no sean fijas por casillas vacias
         for (int j = 0; j < _size; j++) {
             for (int i = 0; i < _size; i++) {
-                if (_board[i][j].getType() != Cell.Type.FixedBlue && _board[i][j].getType() != Cell.Type.FixedRed) {
+                if (!_board[i][j].isFixed()) {
                     _board[i][j].setType(Cell.Type.Empty);
                 }
             }
@@ -112,13 +115,13 @@ public class Board {
             int casillax = (int) (Math.abs(ratonx / (_windowWidth / _size)));
             int casillay = (int) (Math.abs(ratony / (_windowWidth / _size)));
 
-            if(_board[casillax][casillay].getType() != Cell.Type.FixedBlue && _board[casillax][casillay].getType() != Cell.Type.FixedRed)
+            if (!_board[casillax][casillay].isFixed())
                 _moves.push(new Vector2D(casillax, casillay));
 
             _board[casillax][casillay].handleInput(e);
             //actualiza el contador de complecion
-            if(_board[casillax][casillay].getType() == Cell.Type.Empty) _completed-=1;
-            if(_board[casillax][casillay].getType() == Cell.Type.Blue) _completed+=1;
+            if (_board[casillax][casillay].getType() == Cell.Type.Empty) _completed -= 1;
+            if (_board[casillax][casillay].getType() == Cell.Type.Blue) _completed += 1;
         }
     }
 
@@ -132,9 +135,9 @@ public class Board {
                     next = countAdjacent(i, j);
                     if (next != n)
                         return false;
-                } else if(n==0) {
+                } else if (n == 0) {
                     //comprobacion de casillas que deberian ser rojas
-                    if(checkRed(i,j) && (_board[i][j].getType() != Cell.Type.Red && _board[i][j].getType() != Cell.Type.FixedRed))
+                    if (checkRed(i, j) && (_board[i][j].getType() != Cell.Type.Red && _board[i][j].getType() != Cell.Type.Red))
                         return false;
                 }
             }
@@ -147,10 +150,11 @@ public class Board {
             for (int i = 0; i < _size; i++) {
                 if (_board[i][j].getType() == Cell.Type.Blue) {
                     _board[i][j].setNumber(countAdjacent(i, j));
-                    _board[i][j].setType(Cell.Type.FixedBlue);
+                    _board[i][j].setFixed(true);
 
                 } else if (_board[i][j].getType() == Cell.Type.Empty || _board[i][j].getType() == Cell.Type.Red) {
-                    _board[i][j].setType(Cell.Type.FixedRed);
+                    _board[i][j].setType(Cell.Type.Red);
+                    _board[i][j].setFixed(true);
                 }
 
             }
@@ -165,8 +169,8 @@ public class Board {
      * Returns the count of the specified cell type in the specified direction from the origin position
      * It goes recursively through all the board in the specified direction.
      *
-     * @param pos  the initial pos.
-     * @param dir  the direction to path in the board.
+     * @param pos the initial pos.
+     * @param dir the direction to path in the board.
      * @return the total count.
      */
     int count(Vector2D pos, Vector2D dir) {
@@ -174,7 +178,7 @@ public class Board {
 
         Vector2D newPos = Vector2D.sum(pos, dir);
         if (!outOfBoard(newPos)) {
-            if (_board[newPos.x][newPos.y].getType() == Cell.Type.Blue || _board[newPos.x][newPos.y].getType() == Cell.Type.FixedBlue) {
+            if (_board[newPos.x][newPos.y].getType() == Cell.Type.Blue) {
                 n++;
                 n += count(newPos, dir);
             }
@@ -198,10 +202,10 @@ public class Board {
     //comprueba si la casilla indicada no ve azules fijas, y por lo tanto, tiene que ser roja
     boolean checkRed(int x, int y) {
 
-        if(findFixedBlue(new Vector2D(x, y), new Vector2D(0, 1))) return false;
-        if(findFixedBlue(new Vector2D(x, y), new Vector2D(1, 0))) return false;
-        if(findFixedBlue(new Vector2D(x, y), new Vector2D(-1, 0))) return false;
-        if(findFixedBlue(new Vector2D(x, y), new Vector2D(0, -1))) return false;
+        if (findFixedBlue(new Vector2D(x, y), new Vector2D(0, 1))) return false;
+        if (findFixedBlue(new Vector2D(x, y), new Vector2D(1, 0))) return false;
+        if (findFixedBlue(new Vector2D(x, y), new Vector2D(-1, 0))) return false;
+        if (findFixedBlue(new Vector2D(x, y), new Vector2D(0, -1))) return false;
 
         return true;
     }
@@ -210,7 +214,7 @@ public class Board {
     boolean findFixedBlue(Vector2D pos, Vector2D dir) {
         Vector2D newPos = Vector2D.sum(pos, dir);
         if (!outOfBoard(newPos)) {
-            if (_board[newPos.x][newPos.y].getType() == Cell.Type.FixedBlue) {
+            if (_board[newPos.x][newPos.y].getType() == Cell.Type.Blue && _board[newPos.x][newPos.y].isFixed()) {
                 return true;
             } else return findFixedBlue(newPos, dir);
         }
@@ -283,28 +287,28 @@ public class Board {
         int cellWidth = _windowWidth / _size;
         for (int i = 0; i < _board.length; i++) {
             for (int j = 0; j < _board[i].length; j++) {
-                _board[i][j] = new Cell(i * cellWidth - (_windowWidth / 2), j * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 0, Cell.Type.Empty, new Vector2D(i, j));
+                _board[i][j] = new Cell(i * cellWidth - (_windowWidth / 2), j * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 0, Cell.Type.Empty, new Vector2D(i, j), false);
             }
         }
-        _board[0][1] = new Cell(0 * cellWidth - (_windowWidth / 2), 1 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 0, Cell.Type.Red, new Vector2D(0, 1));
-        _board[1][0] = new Cell(1 * cellWidth - (_windowWidth / 2), 0 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 0, Cell.Type.Red, new Vector2D(1, 0));
-        _board[1][2] = new Cell(1 * cellWidth - (_windowWidth / 2), 2 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 1, Cell.Type.Blue, new Vector2D(1, 2));
-        _board[2][1] = new Cell(2 * cellWidth - (_windowWidth / 2), 1 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 2, Cell.Type.Blue, new Vector2D(2, 1));
-        _board[3][3] = new Cell(3 * cellWidth - (_windowWidth / 2), 3 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 4, Cell.Type.Blue, new Vector2D(3, 3));
-        _board[2][3] = new Cell(2 * cellWidth - (_windowWidth / 2), 3 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 2, Cell.Type.Blue, new Vector2D(2, 3));
+        _board[0][1] = new Cell(0 * cellWidth - (_windowWidth / 2), 1 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 0, Cell.Type.Red, new Vector2D(0, 1), true);
+        _board[1][0] = new Cell(1 * cellWidth - (_windowWidth / 2), 0 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 0, Cell.Type.Red, new Vector2D(1, 0), true);
+        _board[1][2] = new Cell(1 * cellWidth - (_windowWidth / 2), 2 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 1, Cell.Type.Blue, new Vector2D(1, 2), true);
+        _board[2][1] = new Cell(2 * cellWidth - (_windowWidth / 2), 1 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 2, Cell.Type.Blue, new Vector2D(2, 1), true);
+        _board[3][3] = new Cell(3 * cellWidth - (_windowWidth / 2), 3 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 4, Cell.Type.Blue, new Vector2D(3, 3), true);
+        _board[2][3] = new Cell(2 * cellWidth - (_windowWidth / 2), 3 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 2, Cell.Type.Blue, new Vector2D(2, 3), true);
     }
 
     public int getCompletedPercentage() {
-        return (_completed*100)/(_size*_size);
+        return (_completed * 100) / (_size * _size);
     }
 
     public void undoMove() {
-        if(!_moves.empty()) {
+        if (!_moves.empty()) {
             Vector2D move = _moves.pop();
             _board[move.x][move.y].changeColor();
             _board[move.x][move.y].changeColor();
-            if(_board[move.x][move.y].getType() == Cell.Type.Empty) _completed-=1;
-            if(_board[move.x][move.y].getType() == Cell.Type.Blue) _completed+=1;
+            if (_board[move.x][move.y].getType() == Cell.Type.Empty) _completed -= 1;
+            if (_board[move.x][move.y].getType() == Cell.Type.Blue) _completed += 1;
         }
     }
 
@@ -319,5 +323,3 @@ public class Board {
     private int _size;
     private int _windowWidth;
 }
-
-

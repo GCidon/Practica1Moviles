@@ -11,4 +11,10 @@ class Vector2D {
     public static Vector2D sum(Vector2D a, Vector2D b) {
         return new Vector2D(a.x + b.x, a.y + b.y);
     }
+
+    public static boolean isEqual(Vector2D a, Vector2D b) {
+        if (a.x == b.x && a.y == b.y) return true;
+        return false;
+    }
 }
+
