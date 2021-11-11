@@ -10,27 +10,27 @@ import gdv.ohno.engine.Input;
 
 public class Logic implements gdv.ohno.engine.Logic {
 
-    enum GameState {MENU, LEVEL};
+    enum GameState {MENU, LEVEL}
+
+    ;
 
     public Logic() {
 
     }
 
     public void update(float deltaTime) throws Exception {
-        if(_state == GameState.LEVEL && !_end) {
-            if(_logicGame.getBoard().CheckWin() && _logicGame.getBoard().getCompletedPercentage() == 100) {
+        if (_state == GameState.LEVEL && !_end) {
+            if (_logicGame.getBoard().CheckWin() && _logicGame.getBoard().getCompletedPercentage() == 100) {
                 _end = true;
                 _logicGame.setEnd(true);
             }
-        }
-        else if(_state == GameState.LEVEL){
-            if(_timer > _transitionTime) {
+        } else if (_state == GameState.LEVEL) {
+            if (_timer > _transitionTime) {
                 startMenu();
                 _logicMenu.setSelecting(true);
                 _timer = 0.0;
                 _end = false;
-            }
-            else {
+            } else {
                 _timer += deltaTime;
             }
         }
@@ -46,8 +46,9 @@ public class Logic implements gdv.ohno.engine.Logic {
                 break;
         }
     }
+
     public void handleInput(List<Input.TouchEvent> te) throws Exception {
-        if(!_end) {
+        if (!_end) {
             switch (_state) {
                 case MENU:
                     _logicMenu.handleInput(te);
@@ -58,6 +59,7 @@ public class Logic implements gdv.ohno.engine.Logic {
             }
         }
     }
+
     public void init() throws Exception {
         _engine.getGraphics().setBaseWidth(400);
         _engine.getGraphics().setBaseHeight(600);
@@ -89,7 +91,13 @@ public class Logic implements gdv.ohno.engine.Logic {
         _logicMenu._selecting = true;
     }
 
-    void undo() { _logicGame.getBoard().undoMove(); }
+    void undo() {
+        _logicGame.getBoard().undoMove();
+    }
+
+    void hint() {
+        _logicGame.getHint();
+    }
 
     //diferentes acciones para botones
     public void processButton(String action) throws Exception {
@@ -122,7 +130,7 @@ public class Logic implements gdv.ohno.engine.Logic {
                 undo();
                 break;
             case "hint":
-                //to do
+                hint();
                 break;
             default:
                 break;

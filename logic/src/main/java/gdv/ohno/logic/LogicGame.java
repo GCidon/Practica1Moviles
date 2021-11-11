@@ -19,8 +19,8 @@ public class LogicGame {
     }
 
     public void init() throws Exception {
-        int size = 10 * (10-_boardSize);
-        if(size < 30) size = 30;
+        int size = 10 * (10 - _boardSize);
+        if (size < 30) size = 30;
         _fonts[0] = _engine.getGraphics().newFont("fonts/JosefinSans-Bold.ttf", size, true);
         _fonts[1] = _engine.getGraphics().newFont("fonts/JosefinSans-Bold.ttf", 20, true);
 
@@ -36,7 +36,8 @@ public class LogicGame {
         _board.setLogic(_logica);
         _manager = new HintManager(_board);
 
-        _manager.solve();
+        //_manager.solve();
+        //_board.fillingWin();
     }
 
     public void render(Graphics g) {
@@ -45,10 +46,12 @@ public class LogicGame {
         g.setFont(_fonts[0]);
         g.setColor(0xFF000000);
         String text;
-        if(!_end) {
+        if (!_end && !_hint) {
             //texto de tamaño de tablero
             text = _board.getSize() + "x" + _board.getSize();
             g.drawText(text, (int) (-40), (int) (-220));
+        } else if (_hint && !_end) {
+            g.drawText(_hintText, (int) (-200), (int) (-220));
         } else {
             //texto de ganar partida
             text = "Well done!";
@@ -73,13 +76,14 @@ public class LogicGame {
         g.setFont(_fonts[0]);
         _board.render(g);
 
-        for(int i = 0; i < _buttons.size(); i++) {
+        for (int i = 0; i < _buttons.size(); i++) {
             _buttons.get(i).render(g);
         }
     }
 
     public void handleInput(List<Input.TouchEvent> te) throws Exception {
         for (Input.TouchEvent e : te) {
+            _hint = false;
             _board.handleInput(e);
             for (int i = 0; i < _buttons.size(); i++) {
                 _buttons.get(i).handleInput(e);
@@ -95,17 +99,26 @@ public class LogicGame {
         return _board;
     }
 
-    public void setEnd(boolean aux) { _end = aux; }
+    public void getHint() {
+        _hintText = _manager.getHint().getText();
+        _hint = true;
+    }
+
+    public void setEnd(boolean aux) {
+        _end = aux;
+    }
 
     int _boardSize;
 
     boolean _end = false;
+    boolean _hint = false;
 
     List<Button> _buttons;
     Font _fonts[] = new Font[2];
     Image _images[] = new Image[5];
     Board _board;
     HintManager _manager;
+    String _hintText = "";
 
     Engine _engine;
     Logic _logica;
