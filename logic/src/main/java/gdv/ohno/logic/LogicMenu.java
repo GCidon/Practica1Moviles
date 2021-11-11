@@ -52,14 +52,14 @@ public class LogicMenu {
             g.drawText("Jugar", -50, 0);
 
             g.setFont(_fonts[2]);
-            g.setColor(0xC1C1C1);
+            g.setColor(0xFFC1C1C1);
             g.drawText("Un juego copiado a Q42", -70, 150);
             g.drawText("Creado por Martin Kool", -70, 170);
 
             g.save();
             g.scale(-1);
             g.rotate(180);
-            //g.drawImage(_images[1], -15, 190, 50, 75);
+            g.drawImage(_images[1], -20, 200, 50, 75);
             g.restore();
         }
         //seleccion de tamaño de tablero
@@ -73,8 +73,8 @@ public class LogicMenu {
             //casillas de eleccion de tamaño de tablero
             for(int i = 0; i < 6; i++) {
                 if(i >= 3) iniy = 80;
-                if(i%2 == 0) color = 0x45CCFF;
-                else color = 0xFF3C54;
+                if(i%2 == 0) color = 0xFF45CCFF;
+                else color = 0xFFFF3C54;
                 g.setColor(color);
                 int posx = inix+((i%3)*80);
                 g.fillCircle(posx, -iniy, 75);
@@ -86,7 +86,7 @@ public class LogicMenu {
             g.save();
             g.scale(-1);
             g.rotate(180);
-            //g.drawImage(_images[0], -15, 190, 25, 25);
+            g.drawImage(_images[0], -15, 190, 25, 25);
             g.restore();
         }
 
@@ -108,7 +108,6 @@ public class LogicMenu {
                 }
             }
         }
-
     }
 
     public void setSelecting(boolean aux) {

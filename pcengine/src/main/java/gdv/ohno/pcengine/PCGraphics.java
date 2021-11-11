@@ -63,10 +63,6 @@ public class PCGraphics implements Graphics {
         ((Graphics2D) _graphics).setTransform(_state);
     }
 
-
-
-    //Elegimos en un principio introducir un string del color en vez de su valor directamente ya que consideramos
-    //que de esta manera nos facilitaria el trabajo a la hora de escoger el color adecuado desde la logica.
     public void setColor(int color) {
         _graphics.setColor(new Color(color));
     }

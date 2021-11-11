@@ -1,20 +1,18 @@
 package gdv.ohno.androidengine;
 
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-
-import java.io.File;
 
 import gdv.ohno.engine.Image;
 
 public class AndroidImage implements Image {
 
-    public AndroidImage(String name) {
-        File image = new File(name);
-        if(image.exists()) {
-            _image = BitmapFactory.decodeFile(name);
-        } else {
-            System.out.println("Cagaste");
+    public AndroidImage(String name, AssetManager manager) {
+        try {
+            _image = BitmapFactory.decodeStream(manager.open(name));
+        } catch(Exception e) {
+            e.printStackTrace();
         }
     }
 

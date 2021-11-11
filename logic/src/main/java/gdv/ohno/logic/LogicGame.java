@@ -32,7 +32,7 @@ public class LogicGame {
         _buttons.add(new Button(-25, 275, 50, 50, "undo", _logica));
         _buttons.add(new Button(75, 275, 50, 50, "hint", _logica));
 
-        _board = new Board(_boardSize, (int) _engine.getGraphics().getWidth());
+        _board = new Board(_boardSize, (int) _engine.getGraphics().getBaseWidth());
         _board.setLogic(_logica);
         _manager = new HintManager(_board);
 

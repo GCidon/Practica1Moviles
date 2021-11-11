@@ -6,7 +6,7 @@ import gdv.ohno.engine.Input;
 public class Cell extends GameObject {
     enum Type {Empty, Blue, Red, FixedBlue, FixedRed}
 
-    private int[] Colors = {0xEEEEEE, 0x45CCFF, 0xFF3C54, 0x45CCFF, 0xFF3C54};
+    private int[] Colors = {0xFFEEEEEE, 0xFF45CCFF, 0xFFFF3C54, 0xFF45CCFF, 0xFFFF3C54};
 
     public Cell(int x, int y, int w, int h, int n, Type type, Vector2D pos) {
         super(x, y, w, h);

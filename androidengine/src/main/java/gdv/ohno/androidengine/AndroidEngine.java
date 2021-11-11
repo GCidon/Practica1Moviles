@@ -32,7 +32,9 @@ public class AndroidEngine implements Engine, Runnable {
         logica.update((float) deltaTime);
     }
 
-    public void handleInput() throws Exception { logica.handleInput(_input.getTouchEvents()); }
+    public void handleInput() throws Exception {
+        logica.handleInput(_input.getTouchEvents());
+    }
 
     public void render(Graphics g) throws Exception {
         _ag.clear(0xFF000000);
@@ -54,13 +56,10 @@ public class AndroidEngine implements Engine, Runnable {
         while (_running) {
             canvas = _holder.lockCanvas();
             _ag.setCanvas(canvas);
-
             double currentTime = System.nanoTime();
             double deltaTime = (currentTime - lastTime) / 1e9;
-
             update(deltaTime);
             handleInput();
-
             while (!_holder.getSurface().isValid());
             try {
                 if(canvas != null) {

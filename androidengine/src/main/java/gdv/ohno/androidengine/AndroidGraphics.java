@@ -13,7 +13,7 @@ public class AndroidGraphics implements Graphics {
 
     public void setCanvas(Canvas canvas) {
         _c = canvas;
-        _font = new AndroidFont[25];
+        //_font = new AndroidFont[25];
         //grosor de lineas
         _p.setStrokeWidth((float) 1.5);
     }
@@ -67,7 +67,6 @@ public class AndroidGraphics implements Graphics {
 
     public void drawLine(int x1, int y1, int x2, int y2) {
         _c.drawLine(x1, y1, x2, y2, _p);
-
     }
 
     public void fillRect(int x1, int y1, int x2, int y2) {
@@ -76,7 +75,10 @@ public class AndroidGraphics implements Graphics {
     }
 
     public void fillCircle(int x, int y, int r) {
-        _c.drawCircle(x, y, r, _p);
+        float baseProportion = getBaseWidth()/getBaseHeight();
+        float proportion = getWidth()/getHeight();
+        int radius = (int)((r*proportion)/baseProportion);
+        _c.drawCircle(x+radius*2/3, y+radius*2/3, radius*2/3, _p);
     }
 
     @Override
@@ -87,7 +89,7 @@ public class AndroidGraphics implements Graphics {
     }
 
     public Image newImage(String name) {
-        return new AndroidImage(name);
+        return new AndroidImage(name, context.getAssets());
     }
 
     public void drawImage(Image image, int x, int y, int x2, int y2) {
@@ -150,7 +152,7 @@ public class AndroidGraphics implements Graphics {
     float width_;
     float height_;
     //Array de fuentes creadas
-    AndroidFont[] _font;
+    //AndroidFont[] _font;
     Canvas _c;
     Context context;
     Paint _p = new Paint();

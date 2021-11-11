@@ -14,8 +14,9 @@ public class Button extends GameObject {
         //Actualizamos la escala en cada frame para comprobar el tamaño de ventana nuevo (si lo hay)
         _scale = calculateSize();
 
-        g.setColor(0xFFFF0000);
-        g.drawLine(_x, _y, (int)(_x+_w), (int)(_y+_w));
+        //debug
+        //g.setColor(0xFFFF0000);
+        //g.drawLine(_x, _y, (int)(_x+_w), (int)(_y+_w));
     }
 
     public void update(float deltaTime) {
@@ -26,13 +27,6 @@ public class Button extends GameObject {
         //Transformamos las coordenadas del raton a las coordenadas transformadas y escaladas
         float _ratonx = (te.getPosX() - _logic._engine.getGraphics().getBaseWidth()/2)*(1.0f/_scale);
         float _ratony = (_logic._engine.getGraphics().getBaseHeight()/2 - te.getPosY())*(1.0f/_scale);
-
-
-        System.out.println(te.getPosX());
-        System.out.println(te.getPosY());
-        System.out.println(_ratonx);
-        System.out.println(_ratony);
-        System.out.println("------------------");
 
         //Y actualizamos tambien la altura y anchura del boton logico
         float _dx = _x + (_w*_scale);
