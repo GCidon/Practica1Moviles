@@ -9,10 +9,10 @@ public class Hint {
                 _text = "Este número ya ve todos sus puntos";
                 break;
             case 2:
-                _text = "Si pones un punto superas el número de visibles";
+                _text = "Si pones un punto mas\nsuperas el número de visibles";
                 break;
             case 3:
-                _text = "En todos los casos posibles una debería ser azul siempre";
+                _text = "En todos los casos posibles\nuna debería ser azul siempre";
                 break;
             case 4:
                 _text = "Este número ve demasiados puntos";
