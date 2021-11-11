@@ -20,13 +20,14 @@ public class Board {
         _inix = _iniy = -_windowWidth / 2;
         _completed = 0;
         _moves = new Stack<Vector2D>();
+        _fixedReds = new ArrayList<Vector2D>();
 
-        //GenerateBoard();
-        pruebas();
+        GenerateBoard();
+        //pruebas();
     }
 
     public void GenerateBoard() {
-        int cellWidth = _windowWidth / _size;
+        int cellWidth = (int)(_windowWidth*0.9 / _size);
 
         //creamos una lista de numeros, indicando el indice de cada casilla
         ArrayList<Integer> listaRnd = new ArrayList<Integer>();
@@ -42,8 +43,8 @@ public class Board {
         for (int i = 0; i < minRed; i++) {
             boardx = listaRnd.get(i) / _size;
             boardy = listaRnd.get(i) % _size;
-            posx = boardx * cellWidth - (_windowWidth / 2);
-            posy = boardy * cellWidth - (_windowWidth / 2);
+            posx = boardx * cellWidth - (_windowWidth / 2) + (int)(_windowWidth*0.05);
+            posy = boardy * cellWidth - (_windowWidth / 2) + (int)(_windowWidth*0.05);
             _board[boardx][boardy] = new Cell(posx, posy, cellWidth, cellWidth, 0, Cell.Type.Red, new Vector2D(boardx, boardy), false);
             _board[boardx][boardy].setLogic(_logic);
         }
@@ -51,8 +52,8 @@ public class Board {
         for (int i = minRed; i < listaRnd.size(); i++) {
             boardx = listaRnd.get(i) / _size;
             boardy = listaRnd.get(i) % _size;
-            posx = boardx * cellWidth - (_windowWidth / 2);
-            posy = boardy * cellWidth - (_windowWidth / 2);
+            posx = boardx * cellWidth - (_windowWidth / 2) + (int)(_windowWidth*0.05);
+            posy = boardy * cellWidth - (_windowWidth / 2) + (int)(_windowWidth*0.05);
             _board[boardx][boardy] = new Cell(posx, posy, cellWidth, cellWidth, 0, Cell.Type.Blue, new Vector2D(boardx, boardy), false);
             _board[boardx][boardy].setLogic(_logic);
         }
@@ -72,7 +73,7 @@ public class Board {
                             _board[i][j].setType(Cell.Type.Blue);
                             _board[i][j].setFixed(true);
                             _board[i][j].setNumber(nAlrededor);
-                            _completed += 1;
+                            _precompleted += 1;
                         }
                     }
                 } else {
@@ -80,7 +81,8 @@ public class Board {
                     if (rand == 1) {
                         _board[i][j].setType(Cell.Type.Red);
                         _board[i][j].setFixed(true);
-                        _completed += 1;
+                        _precompleted += 1;
+                        _fixedReds.add(new Vector2D(i,j));
                     }
                 }
             }
@@ -216,7 +218,8 @@ public class Board {
         if (!outOfBoard(newPos)) {
             if (_board[newPos.x][newPos.y].getType() == Cell.Type.Blue && _board[newPos.x][newPos.y].isFixed()) {
                 return true;
-            } else return findFixedBlue(newPos, dir);
+            } else if(_board[newPos.x][newPos.y].getType() == Cell.Type.Red) return false;
+            else return findFixedBlue(newPos, dir);
         }
         return false;
     }
@@ -299,7 +302,7 @@ public class Board {
     }
 
     public int getCompletedPercentage() {
-        return (_completed * 100) / (_size * _size);
+        return (_completed * 100) / ((_size * _size) - _precompleted);
     }
 
     public void undoMove() {
@@ -312,14 +315,20 @@ public class Board {
         }
     }
 
+    public void fixedClicked() {
+
+    }
+
     private int _inix;
     private int _iniy;
 
     int _completed;
+    int _precompleted;
 
     Stack<Vector2D> _moves;
     private Logic _logic;
     private Cell[][] _board;
+    private ArrayList<Vector2D> _fixedReds;
     private int _size;
     private int _windowWidth;
 }

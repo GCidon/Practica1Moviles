@@ -6,7 +6,7 @@ import gdv.ohno.engine.Input;
 public class Cell extends GameObject {
     enum Type {Empty, Blue, Red}
 
-    private int[] Colors = {0xFFEEEEEE, 0xFF45CCFF, 0xFFFF3C54};
+    protected int[] Colors = {0xFFEEEEEE, 0xFF45CCFF, 0xFFFF3C54};
 
     public Cell(int x, int y, int w, int h, int n, Type type, Vector2D pos, boolean fixed) {
         super(x, y, w, h);
@@ -14,6 +14,7 @@ public class Cell extends GameObject {
         _n = n;
         _type = type;
         _fixed = fixed;
+        _clicked = false;
     }
 
     public int getNumber() {
@@ -69,9 +70,16 @@ public class Cell extends GameObject {
         g.setColor(Colors[_type.ordinal()]);
         g.fillCircle((int) _x, (int) _y, (int) _w);
 
-        if (_n != 0 && _type == Type.Blue) {
+        if (_n != 0) {
             g.setColor(0xFFFFFFFF);
             g.drawText(Integer.toString(_n), (int) (_x + _w / 3), (int) (-_y - _h / 3));
+        }
+
+        if(_type == Type.Red && _fixed && _clicked) {
+            g.save();
+            g.scale(-1);
+            g.drawImage(_logic._logicGame.getImage(3), _x, _y, -(int) (_x + _w), -(int) (_y + _h));
+            g.restore();
         }
     }
 
@@ -87,21 +95,23 @@ public class Cell extends GameObject {
             case Blue:
                 if (!_fixed)
                     _type = Type.Red;
+                else _clicked = !_clicked;
                 break;
             case Red:
                 if (!_fixed)
                     _type = Type.Empty;
+                else _clicked = !_clicked;
                 break;
             default:
                 break;
         }
     }
 
-    private int _n;
-    private boolean _fixed, _hinted = false;
-    private Type _type;
-    private Logic _logic;
-    private Vector2D _pos;
+    protected int _n;
+    protected boolean _fixed = false, _hinted = false, _clicked = false;
+    protected Type _type;
+    protected Logic _logic;
+    protected Vector2D _pos;
 }
 
 

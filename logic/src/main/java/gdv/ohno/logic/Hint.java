@@ -6,13 +6,13 @@ public class Hint {
     public Hint(int type, Vector2D pos) {
         switch (type) {
             case 1:
-                _text = "El número ya tiene todas sus azules visibles";
+                _text = "El número ya tiene todas\nsus azules visibles";
                 break;
             case 2:
-                _text = "Si pones un azul más superas el número de visibles man";
+                _text = "Si pones un azul más superas\nel número de visibles man";
                 break;
             case 3:
-                _text = "En todos los casos una es azularda siempre";
+                _text = "En todos los casos\nuna es azularda siempre";
                 break;
             case 4:
                 _text = "Te calentaste con las asules";
