@@ -21,9 +21,6 @@ public class Board {
         _completed = 0;
         _moves = new Stack<Vector2D>();
         _fixedReds = new ArrayList<Vector2D>();
-
-        GenerateBoard();
-        //pruebas();
     }
 
     public void GenerateBoard() {
@@ -123,7 +120,7 @@ public class Board {
             _board[casillax][casillay].handleInput(e);
             //actualiza el contador de complecion
             if (_board[casillax][casillay].getType() == Cell.Type.Empty) _completed -= 1;
-            if (_board[casillax][casillay].getType() == Cell.Type.Blue) _completed += 1;
+            if (_board[casillax][casillay].getType() == Cell.Type.Blue && !_board[casillax][casillay].isFixed()) _completed += 1;
         }
     }
 
@@ -282,25 +279,6 @@ public class Board {
         else return false;
     }
 
-    public void setBoard(Cell[][] board) {
-        _board = board;
-    }
-
-    private void pruebas() {
-        int cellWidth = _windowWidth / _size;
-        for (int i = 0; i < _board.length; i++) {
-            for (int j = 0; j < _board[i].length; j++) {
-                _board[i][j] = new Cell(i * cellWidth - (_windowWidth / 2), j * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 0, Cell.Type.Empty, new Vector2D(i, j), false);
-            }
-        }
-        _board[0][1] = new Cell(0 * cellWidth - (_windowWidth / 2), 1 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 0, Cell.Type.Red, new Vector2D(0, 1), true);
-        _board[1][0] = new Cell(1 * cellWidth - (_windowWidth / 2), 0 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 0, Cell.Type.Red, new Vector2D(1, 0), true);
-        _board[1][2] = new Cell(1 * cellWidth - (_windowWidth / 2), 2 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 1, Cell.Type.Blue, new Vector2D(1, 2), true);
-        _board[2][1] = new Cell(2 * cellWidth - (_windowWidth / 2), 1 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 2, Cell.Type.Blue, new Vector2D(2, 1), true);
-        _board[3][3] = new Cell(3 * cellWidth - (_windowWidth / 2), 3 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 4, Cell.Type.Blue, new Vector2D(3, 3), true);
-        _board[2][3] = new Cell(2 * cellWidth - (_windowWidth / 2), 3 * cellWidth - (_windowWidth / 2), cellWidth, cellWidth, 2, Cell.Type.Blue, new Vector2D(2, 3), true);
-    }
-
     public int getCompletedPercentage() {
         return (_completed * 100) / ((_size * _size) - _precompleted);
     }
@@ -315,8 +293,10 @@ public class Board {
         }
     }
 
-    public void fixedClicked() {
-
+    public void clickFixedReds() {
+        if(!_fixedReds.isEmpty()) {
+            for (Vector2D c : _fixedReds) _board[c.x][c.y].setClicked();
+        }
     }
 
     private int _inix;

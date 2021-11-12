@@ -6,7 +6,7 @@ public class Hint {
     public Hint(int type, Vector2D pos) {
         switch (type) {
             case 1:
-                _text = "Este número ya ve todos sus puntos";
+                _text = "Este número ya ve\ntodos sus puntos";
                 break;
             case 2:
                 _text = "Si pones un punto mas\nsuperas el número de visibles";
@@ -15,10 +15,10 @@ public class Hint {
                 _text = "En todos los casos posibles\nuna debería ser azul siempre";
                 break;
             case 4:
-                _text = "Este número ve demasiados puntos";
+                _text = "Este número ve\n demasiados puntos";
                 break;
             case 5:
-                _text = "Este número no ve suficientes puntos";
+                _text = "Este número no ve\n suficientes puntos";
                 break;
             case 6:
                 _text = "Esta debería ser fácil ;)";

@@ -36,10 +36,8 @@ public class LogicGame {
 
         _board = new Board(_boardSize, (int) _engine.getGraphics().getBaseWidth());
         _board.setLogic(_logica);
+        _board.GenerateBoard();
         _manager = new HintManager(_board);
-
-        //_manager.solve();
-        //_board.fillingWin();
     }
 
     public void render(Graphics g) {
@@ -60,8 +58,8 @@ public class LogicGame {
             }
         } else {
             //texto de ganar partida
-            text = "Well done!";
-            g.drawText(text, (int) (-120), (int) (-200));
+            text = "¡Bien hecho!";
+            g.drawText(text, text.length()*-12, (int) (-200));
         }
 
         //texto de porcentaje

@@ -57,6 +57,8 @@ public class Cell extends GameObject {
         _hinted = h;
     }
 
+    public void setClicked() {_clicked = !_clicked; }
+
     public void update(float deltaTime) {
 
     }
@@ -76,10 +78,7 @@ public class Cell extends GameObject {
         }
 
         if(_type == Type.Red && _fixed && _clicked) {
-            g.save();
-            g.scale(-1);
-            g.drawImage(_logic._logicGame.getImage(3), _x, _y, -(int) (_x + _w), -(int) (_y + _h));
-            g.restore();
+            g.drawImage(_logic.getLogicGame().getImage(3), (int)(_x+_w), (int)(_y+_h), (int)(- _w) , (int) (- _h));
         }
     }
 
@@ -95,17 +94,18 @@ public class Cell extends GameObject {
             case Blue:
                 if (!_fixed)
                     _type = Type.Red;
-                else _clicked = !_clicked;
+                else _logic.getLogicGame().getBoard().clickFixedReds();
                 break;
             case Red:
                 if (!_fixed)
                     _type = Type.Empty;
-                else _clicked = !_clicked;
+                else _logic.getLogicGame().getBoard().clickFixedReds();
                 break;
             default:
                 break;
         }
     }
+
 
     protected int _n;
     protected boolean _fixed = false, _hinted = false, _clicked = false;

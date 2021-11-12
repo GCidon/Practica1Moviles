@@ -12,8 +12,6 @@ public class Logic implements gdv.ohno.engine.Logic {
 
     enum GameState {MENU, LEVEL}
 
-    ;
-
     public Logic() {
 
     }
@@ -136,6 +134,9 @@ public class Logic implements gdv.ohno.engine.Logic {
                 break;
         }
     }
+
+    public LogicGame getLogicGame() {return _logicGame;}
+    public LogicMenu get_logicMenu() {return _logicMenu;}
 
     public void getEngine(Engine engine) {
         _engine = engine;
