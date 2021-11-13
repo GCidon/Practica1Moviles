@@ -94,16 +94,16 @@ public class AndroidGraphics implements Graphics {
 
     public void drawImage(Image image, int x, int y, int x2, int y2) {
         AndroidImage img = (AndroidImage)image;
-        Rect r = new Rect(x, y, x2, y2);
+        Rect r = new Rect(x, y, x+x2, y+y2);
         Rect d = new Rect(0,0, img.getWidth(), img.getHeight());
-        _c.drawBitmap(img.getImage(), r, d, _p);
+        _c.drawBitmap(img.getImage(), d, r, _p);
     }
 
     public void drawFramedImage(Image image, int dx, int dy, int dx2, int dy2, int sx, int sy, int sx2, int sy2) {
         AndroidImage img = (AndroidImage)image;
-        Rect r = new Rect(dx, dy, dx2, dy2);
+        Rect r = new Rect(dx, dy, dx+dx2, dy+dy2);
         Rect d = new Rect(sx,sy, sx2, sy2);
-        _c.drawBitmap(img.getImage(), r, d, _p);
+        _c.drawBitmap(img.getImage(), d, r, _p);
     }
 
     public float getWidth() {

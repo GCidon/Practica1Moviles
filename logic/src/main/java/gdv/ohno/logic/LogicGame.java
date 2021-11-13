@@ -71,9 +71,10 @@ public class LogicGame {
         //imagenes de botones
         g.save();
         g.scale(-1);
-        g.drawImage(_images[0], -75, -220, -50, -50);
-        g.drawImage(_images[1], 125, -220, -50, -50);
-        g.drawImage(_images[2], 25, -220, -50, -50);
+        g.rotate(180);
+        g.drawImage(_images[0], 75, 220, 50, 50);
+        g.drawImage(_images[1], -125, 220, 50, 50);
+        g.drawImage(_images[2], -25, 220, 50, 50);
         g.restore();
 
         //tablero

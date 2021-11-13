@@ -44,6 +44,7 @@ public class Board {
             posy = boardy * cellWidth - (_windowWidth / 2) + (int)(_windowWidth*0.05);
             _board[boardx][boardy] = new Cell(posx, posy, cellWidth, cellWidth, 0, Cell.Type.Red, new Vector2D(boardx, boardy), false);
             _board[boardx][boardy].setLogic(_logic);
+            _board[boardx][boardy].setBoard(this);
         }
         //rellenamos el resto de casillas azules
         for (int i = minRed; i < listaRnd.size(); i++) {
@@ -53,6 +54,7 @@ public class Board {
             posy = boardy * cellWidth - (_windowWidth / 2) + (int)(_windowWidth*0.05);
             _board[boardx][boardy] = new Cell(posx, posy, cellWidth, cellWidth, 0, Cell.Type.Blue, new Vector2D(boardx, boardy), false);
             _board[boardx][boardy].setLogic(_logic);
+            _board[boardx][boardy].setBoard(this);
         }
         //corregimos las casillas que deberian ser rojas y aleatoriamente asignamos las casillas
         //fijas, tanto azules como rojas
@@ -297,6 +299,11 @@ public class Board {
         if(!_fixedReds.isEmpty()) {
             for (Vector2D c : _fixedReds) _board[c.x][c.y].setClicked();
         }
+    }
+
+    public boolean areFixedClicked() {
+        if(!_fixedReds.isEmpty()) return _board[_fixedReds.get(0).x][_fixedReds.get(0).y].isClicked();
+        else return false;
     }
 
     private int _inix;

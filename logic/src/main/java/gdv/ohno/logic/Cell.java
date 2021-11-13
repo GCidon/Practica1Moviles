@@ -24,6 +24,7 @@ public class Cell extends GameObject {
     public boolean isFixed() {
         return _fixed;
     }
+    public boolean isClicked() {return _clicked;}
 
     public Type getType() {
         return _type;
@@ -59,6 +60,8 @@ public class Cell extends GameObject {
 
     public void setClicked() {_clicked = !_clicked; }
 
+    public void setBoard(Board board) { _board = board; }
+
     public void update(float deltaTime) {
 
     }
@@ -66,11 +69,11 @@ public class Cell extends GameObject {
     public void render(Graphics g) {
         if (_hinted) {
             g.setColor(0xFF000000);
-            g.fillCircle((int) _x, (int) _y, (int) _w + 3);
+            g.fillCircle(_x, _y, (int) _w + 3);
         }
 
         g.setColor(Colors[_type.ordinal()]);
-        g.fillCircle((int) _x, (int) _y, (int) _w);
+        g.fillCircle(_x, _y, (int) _w);
 
         if (_n != 0) {
             g.setColor(0xFFFFFFFF);
@@ -78,7 +81,7 @@ public class Cell extends GameObject {
         }
 
         if(_type == Type.Red && _fixed && _clicked) {
-            g.drawImage(_logic.getLogicGame().getImage(3), (int)(_x+_w), (int)(_y+_h), (int)(- _w) , (int) (- _h));
+            g.drawImage(_logic.getLogicGame().getImage(3), (int)(_x+(_w*3/4)), (int)(_y+(_h*3/4)), (int)(-_w*0.75) , (int) (-_h*0.75));
         }
     }
 
@@ -87,22 +90,25 @@ public class Cell extends GameObject {
     }
 
     public void changeColor() {
-        switch (_type) {
-            case Empty:
-                _type = Type.Blue;
-                break;
-            case Blue:
-                if (!_fixed)
+        if(!_fixed) {
+            switch (_type) {
+                case Empty:
+                    _type = Type.Blue;
+                    break;
+                case Blue:
                     _type = Type.Red;
-                else _logic.getLogicGame().getBoard().clickFixedReds();
-                break;
-            case Red:
-                if (!_fixed)
+                    break;
+                case Red:
                     _type = Type.Empty;
-                else _logic.getLogicGame().getBoard().clickFixedReds();
-                break;
-            default:
-                break;
+                    break;
+                default:
+                    break;
+            }
+            if(_board.areFixedClicked())
+                _board.clickFixedReds();
+        } else {
+            if(!_board.areFixedClicked())
+                _board.clickFixedReds();
         }
     }
 
@@ -112,6 +118,7 @@ public class Cell extends GameObject {
     protected Type _type;
     protected Logic _logic;
     protected Vector2D _pos;
+    protected Board _board;
 }
 
 
