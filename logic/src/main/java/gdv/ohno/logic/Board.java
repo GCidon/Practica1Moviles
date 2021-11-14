@@ -107,15 +107,28 @@ public class Board {
 
     public void handleInput(Input.TouchEvent e) throws Exception {
         //Transformacion de la pulsacion a posicion del tablero
+        int aux1=(int)_logic._engine.getGraphics().getWidth();
+        int aux2=(int)_logic._engine.getGraphics().getHeight();
+        int aux3 = e.getPosX();
+        int aux4 = e.getPosY();
         float ratonx = (e.getPosX() - _logic._engine.getGraphics().getWidth() / 2) - _inix;
         float ratony = (_logic._engine.getGraphics().getHeight() / 2 - e.getPosY()) - _iniy;
 
+        System.out.println(aux1);
+        System.out.println(aux2);
+        System.out.println(aux3);
+        System.out.println(aux4);
+        System.out.println(ratonx);
+        System.out.println(ratony);
+        System.out.println("-------------------------------");
+
         //Comprobar si la pulsacion esta dentro del tablero
-        if (ratony > 0 && ratony < _windowWidth) {
+        if (ratony > 0 && ratony < _windowWidth && ratonx > 0 && ratonx < _windowWidth) {
             //Traduccion a casilla especifica
             int casillax = (int) (Math.abs(ratonx / (_windowWidth / _size)));
             int casillay = (int) (Math.abs(ratony / (_windowWidth / _size)));
 
+            //Guardar movimiento
             if (!_board[casillax][casillay].isFixed())
                 _moves.push(new Vector2D(casillax, casillay));
 

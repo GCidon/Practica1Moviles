@@ -25,7 +25,7 @@ public class AndroidEngine implements Engine, Runnable {
 
     @Override
     public Input getInput() {
-        return null;
+        return _input;
     }
 
     public void update(double deltaTime) throws Exception {
@@ -92,7 +92,6 @@ public class AndroidEngine implements Engine, Runnable {
 
         while (_running && _sv.getWidth() == 0) {
         }
-
 
         try {
             running();
