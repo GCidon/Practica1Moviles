@@ -88,7 +88,7 @@ public class Cell extends GameObject {
         }
 
         if (_type == Type.Red && _fixed && _clicked) {
-            g.drawImage(_logic.getLogicGame().getImage(3), (int) (_x + (_w * 3 / 4)), (int) (_y + (_h * 3 / 4)), (int) (-_w * 0.75), (int) (-_h * 0.75));
+            g.drawImage(_logic.getLogicGame().getImage(3), (int) (_x + (_w * 0.875) ), (int) (_y +(_h *0.875) ), (int) (-_w * 0.75), (int) (-_h * 0.75));
         }
     }
 

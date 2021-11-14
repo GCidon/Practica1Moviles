@@ -58,6 +58,10 @@ public class HintManager {
                     if (checkRed(c)) {
                         _hints.add(new Hint(7, c.getPos()));
                     }
+                    else if (mustBeRed(c))
+                    {
+                        _hints.add(new Hint(9, c.getPos()));
+                    }
                 }
             }
         }
@@ -206,10 +210,28 @@ public class HintManager {
         for (Vector2D dir : _dirs) {
             Cell next = _board.nextCell(c.getPos(), dir);
             if (next != null && next.getType() != Cell.Type.Red)
+            {
                 count++;
+            }
+        }
+        if (count <= 0 )
+            return true;
+        return false;
+    }
+
+    private boolean mustBeRed(Cell c) {
+        boolean hadFBlue = false;
+        for (Vector2D dir : _dirs) {
+            Cell next = _board.nextCell(c.getPos(), dir);
+            while (next != null && next.getType() != Cell.Type.Red && !hadFBlue) {
+                if (next.isFixed())
+                    hadFBlue = true;
+                next = _board.nextCell(next.getPos(), dir);
+            }
         }
 
-        if (count <= 0)
+
+        if (!hadFBlue)
             return true;
         return false;
     }
