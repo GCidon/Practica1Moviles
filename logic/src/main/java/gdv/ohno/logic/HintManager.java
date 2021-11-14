@@ -1,118 +1,77 @@
 package gdv.ohno.logic;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Random;
+
 public class HintManager {
     public HintManager(Board board) {
         _board = board;
-        _hint = null;
-    }
-
-    public void solve() {
-        while (!isSolved()) {
-            // mientras no este resuelto se sigue resolviendo
-            for (Cell[] column : _board.getBoard()) {
-                for (Cell c : column) {
-                    // Para las pistas de las celdas azules fijas del mapa
-                    if ((c.getType() == Cell.Type.Blue) && c.getNumber() > 0) {
-                        // PISTA 1
-                        if (fillWithWalls(c)) {
-                            System.out.println("PISTA 1 esta ya ve todos los azoles [" + c.getPos().x + ", " + c.getPos().y + "]");
-                            closeCellWithWalls(c);
-                            _hint = new Hint(1, c.getPos());
-                        } else {
-                            for (Vector2D dir : _dirs) {
-                                // PISTA 2
-                                // si el numero de azules despues de poner en azul una celda gris, supera
-                                // el numero indicado por la celda c es porque la siguiente en esa dir tiene que ser roja
-                                if (greaterThanNumber(c, dir)) {
-                                    Vector2D pos = Vector2D.sum(c.getPos(), dir);
-                                    System.out.println("PISTA 2 aqui va rojo si es azul te pasas man[" + pos.x + ", " + pos.y + "]");
-                                    _board.getBoard()[c.getPos().x + dir.x][c.getPos().y + dir.y].setType(Cell.Type.Red);
-                                    _hint = new Hint(2, c.getPos());
-                                }
-                                // PISTA 3
-                                if (mustBeBlue(c, dir)) {
-                                    Vector2D pos = Vector2D.sum(c.getPos(), dir);
-                                    System.out.println("PISTA 3 en todos los casos una es azularda siempre[" + pos.x + ", " + pos.y + "]");
-                                    _board.getBoard()[c.getPos().x + dir.x][c.getPos().y + dir.y].setType(Cell.Type.Blue);
-                                }
-                            }
-                        }
-                        // PISTAS 4
-                        if (excesiveBlue(c)) {
-                            System.out.println("PISTA 4 te calentaste con las asules");
-                        }
-                        // PISTA 5
-                        else if (excesiveRed(c)) {
-                            System.out.println("PISTA 5 te faltan asulitas");
-                        }
-                    }
-                    // Pistas de las celdas grises
-                    else if (c.getType() == Cell.Type.Empty) {
-                        // PISTA 6
-                        if (checkRed(c)) {
-                            c.setType(Cell.Type.Red);
-                            System.out.println("PISTA 6 jefe tiene que ser roja no hay otra[" + c.getPos().x + ", " + c.getPos().y + "]");
-                        }
-                    }
-
-                    // Las 8, 9 y 10 son opcionales porque las pistas anteriores ya las cubren
-                }
-            }
-        }
+        _hints = new ArrayList<>();
     }
 
     public Hint getHint() {
+        _hints.clear();
+
         for (Cell[] column : _board.getBoard()) {
             for (Cell c : column) {
                 // Para las pistas de las celdas azules fijas del mapa
                 if ((c.getType() == Cell.Type.Blue) && c.getNumber() > 0) {
                     // PISTA 1
                     if (fillWithWalls(c)) {
-                        System.out.println("PISTA 1 esta ya ve todos los azoles [" + c.getPos().x + ", " + c.getPos().y + "]");
-                        _hint = new Hint(1, c.getPos());
+                        _hints.add(new Hint(1, c.getPos()));
                     } else {
                         for (Vector2D dir : _dirs) {
                             // PISTA 2
                             // si el numero de azules despues de poner en azul una celda gris, supera
                             // el numero indicado por la celda c es porque la siguiente en esa dir tiene que ser roja
                             if (greaterThanNumber(c, dir)) {
-                                Vector2D pos = Vector2D.sum(c.getPos(), dir);
-                                System.out.println("PISTA 2 aqui va rojo si es azul te pasas man[" + pos.x + ", " + pos.y + "]");
-                                _hint = new Hint(2, c.getPos());
+                                _hints.add(new Hint(2, c.getPos()));
                             }
                             // PISTA 3
                             if (mustBeBlue(c, dir)) {
-                                Vector2D pos = Vector2D.sum(c.getPos(), dir);
-                                System.out.println("PISTA 3 en todos los casos una es azularda siempre[" + pos.x + ", " + pos.y + "]");
-                                _hint = new Hint(3, c.getPos());
+                                _hints.add(new Hint(3, c.getPos()));
+                            }
+                            // PISTA 8
+                            if (oneDirectionLeft(c, dir)) {
+                                _hints.add(new Hint(8, c.getPos()));
                             }
                         }
                     }
                     // PISTAS 4
                     if (excesiveBlue(c)) {
-                        System.out.println("PISTA 4 te calentaste con las asules");
-                        _hint = new Hint(4, c.getPos());
+                        _hints.add(new Hint(4, c.getPos()));
                     }
                     // PISTA 5
                     else if (excesiveRed(c)) {
-                        System.out.println("PISTA 5 te faltan asulitas");
-                        _hint = new Hint(5, c.getPos());
+                        _hints.add(new Hint(5, c.getPos()));
                     }
                 }
                 // Pistas de las celdas grises
                 else if (c.getType() == Cell.Type.Empty) {
                     // PISTA 6
                     if (checkRed(c)) {
-                        System.out.println("PISTA 6 jefe tiene que ser roja no hay otra[" + c.getPos().x + ", " + c.getPos().y + "]");
-                        _hint = new Hint(6, c.getPos());
+                        _hints.add(new Hint(6, c.getPos()));
+                    }
+                } else if (c.getType() == Cell.Type.Blue) {
+                    // PISTA 7
+                    if (checkRed(c)) {
+                        _hints.add(new Hint(7, c.getPos()));
+                    }
+                    else if (mustBeRed(c))
+                    {
+                        _hints.add(new Hint(9, c.getPos()));
                     }
                 }
-
-                // Las 8, 9 y 10 son opcionales porque las pistas anteriores ya las cubren
             }
         }
 
-        return _hint;
+        int h = rnd.nextInt(_hints.size());
+
+        if (!_hints.isEmpty())
+            return _hints.get(h);
+
+        return null;
     }
 
 
@@ -122,7 +81,7 @@ public class HintManager {
      * @param c Cell to check.
      * @return true if the count of all the adjacent blue cells is equal to the number of the given cell.
      */
-    public boolean fillWithWalls(Cell c) {
+    private boolean fillWithWalls(Cell c) {
         // Si un número tiene ya visibles el número de celdas que dice, se puede poner paredes en los extremos
         int count = 0;
 
@@ -162,27 +121,29 @@ public class HintManager {
      * @param dir direction to check
      * @return true if the count is greater than the number of the initial cell
      */
-    public boolean greaterThanNumber(Cell c, Vector2D dir) {
+    private boolean greaterThanNumber(Cell c, Vector2D dir) {
         // Comprueba los adyacentes y si hay un gris que si se transforma en azul supera
         // el numero de la celda observada devuelve true
         int count = 0;
         Vector2D nextPos = Vector2D.sum(c.getPos(), dir);
         // se comprueba si la siguiente celda esta dentro del tablero
-        if (_board.outOfBoard(nextPos)) return false;
+        while (!_board.outOfBoard(nextPos) && _board.getBoard()[nextPos.x][nextPos.y].getType() != Cell.Type.Red) {
+            Cell.Type type = _board.getBoard()[nextPos.x][nextPos.y].getType();
 
-        Cell.Type type = _board.getBoard()[nextPos.x][nextPos.y].getType();
-        // Si la celda es azul no se puede cambiar asi que devuelve false
-        if (type == Cell.Type.Blue) return false;
+            // si es gris se cambia a azul y se cuentan las adyacentes de la celda inicial
+            if (type == Cell.Type.Empty) {
+                _board.getBoard()[nextPos.x][nextPos.y].setType(Cell.Type.Blue);
+                count = _board.countAdjacent(c.getPos().x, c.getPos().y);
+            }
+            // se devuelve la celda al color inicial
+            _board.getBoard()[nextPos.x][nextPos.y].setType(type);
 
-        // si es gris se cambia a azul y se cuentan las adyacentes de la celda inicial
-        _board.getBoard()[nextPos.x][nextPos.y].setType(Cell.Type.Blue);
-        count = _board.countAdjacent(c.getPos().x, c.getPos().y);
-        // se devuelve la celda al color inicial
-        _board.getBoard()[nextPos.x][nextPos.y].setType(type);
+            // Si la celda es azul sigue hasta que encuentre una gris
+            nextPos = Vector2D.sum(nextPos, dir);
 
-
-        if (count > c.getNumber())
-            return true;
+            if (count > c.getNumber())
+                return true;
+        }
         return false;
     }
 
@@ -192,7 +153,7 @@ public class HintManager {
      * @param c the actual cell to check
      * @return true if the count is greater
      */
-    public boolean excesiveBlue(Cell c) {
+    private boolean excesiveBlue(Cell c) {
         int count = _board.countAdjacent(c.getPos().x, c.getPos().y);
         if (count > c.getNumber())
             return true;
@@ -206,7 +167,7 @@ public class HintManager {
      * @param c the actual cell to check
      * @return true if the count is less
      */
-    public boolean excesiveRed(Cell c) {
+    private boolean excesiveRed(Cell c) {
         int count = 0;
         for (Vector2D dir : _dirs) {
             count += countCellUntilType(c, dir, Cell.Type.Red);
@@ -244,15 +205,33 @@ public class HintManager {
      * @param c the actual cell
      * @return true if the cell needs to be red
      */
-    public boolean checkRed(Cell c) {
+    private boolean checkRed(Cell c) {
         int count = 0;
         for (Vector2D dir : _dirs) {
             Cell next = _board.nextCell(c.getPos(), dir);
             if (next != null && next.getType() != Cell.Type.Red)
+            {
                 count++;
+            }
+        }
+        if (count <= 0 )
+            return true;
+        return false;
+    }
+
+    private boolean mustBeRed(Cell c) {
+        boolean hadFBlue = false;
+        for (Vector2D dir : _dirs) {
+            Cell next = _board.nextCell(c.getPos(), dir);
+            while (next != null && next.getType() != Cell.Type.Red && !hadFBlue) {
+                if (next.isFixed())
+                    hadFBlue = true;
+                next = _board.nextCell(next.getPos(), dir);
+            }
         }
 
-        if (count <= 0)
+
+        if (!hadFBlue)
             return true;
         return false;
     }
@@ -265,11 +244,12 @@ public class HintManager {
      * @param dir the direction to check
      * @return true if a blue is needed in the specified direction
      */
-    public boolean mustBeBlue(Cell c, Vector2D dir) {
+    private boolean mustBeBlue(Cell c, Vector2D dir) {
         int count = 0;
 
         Vector2D nextPos = Vector2D.sum(c.getPos(), dir);
         if (_board.outOfBoard(nextPos)) return false;
+        if (_board.getBoard()[nextPos.x][nextPos.y].getType() == Cell.Type.Blue) return false;
 
         for (Vector2D otherDir : _dirs) {
             if (!Vector2D.isEqual(dir, otherDir)) {
@@ -284,20 +264,32 @@ public class HintManager {
     }
 
     /**
-     * Checks if the puzzle is solved
+     * Checks if the given cell has only one direction left to mark blues on.
      *
-     * @return true if no empty cell remains
+     * @param c
+     * @param dir
+     * @return
      */
-    public boolean isSolved() {
-        for (Cell[] column : _board.getBoard()) {
-            for (Cell t : column) {
-                {
-                    if (t.getType() == Cell.Type.Empty)
-                        return false;
-                }
+    private boolean oneDirectionLeft(Cell c, Vector2D dir) {
+        Cell aux = null;
+        Vector2D nextPos = Vector2D.sum(c.getPos(), dir);
+        if (_board.outOfBoard(nextPos) || _board.getBoard()[nextPos.x][nextPos.y].getType() == Cell.Type.Red)
+            return false;
+
+        for (Vector2D other : _dirs) {
+            // busca en las otras 3 direcciones y si
+            // encuentra una gris existe mas de una direccion posible
+            if (!Vector2D.isEqual(dir, other)) {
+                aux = _board.lookForCell(c.getPos(), other, Cell.Type.Empty);
+                if (aux != null)
+                    return false;
             }
         }
-        return true;
+
+        if (aux == null && _board.countAdjacent(c.getPos().x, c.getPos().y) < c.getNumber())
+            return true;
+
+        return false;
     }
 
     /**
@@ -308,5 +300,6 @@ public class HintManager {
      */
     private Vector2D[] _dirs = {new Vector2D(0, 1), new Vector2D(0, -1), new Vector2D(1, 0), new Vector2D(-1, 0)};
     private Board _board;
-    private Hint _hint;
+    private ArrayList<Hint> _hints;
+    private Random rnd = new Random();
 }

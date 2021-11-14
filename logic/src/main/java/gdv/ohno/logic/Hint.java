@@ -2,6 +2,8 @@ package gdv.ohno.logic;
 
 import org.graalvm.compiler.phases.verify.VerifyUsageWithEquals;
 
+import java.util.Vector;
+
 public class Hint {
     public Hint(int type, Vector2D pos) {
         switch (type) {
@@ -9,19 +11,28 @@ public class Hint {
                 _text = "Este número ya ve\ntodos sus puntos";
                 break;
             case 2:
-                _text = "Si pones un punto mas\nsuperas el número de visibles";
+                _text = "Un punto más en alguna\ndirección superaría el número";
                 break;
             case 3:
                 _text = "En todos los casos posibles\nuna debería ser azul siempre";
                 break;
             case 4:
-                _text = "Este número ve\n demasiados puntos";
+                _text = "Este número ve\ndemasiados puntos";
                 break;
             case 5:
-                _text = "Este número no ve\n suficientes puntos";
+                _text = "Este número no ve\nsuficientes puntos";
                 break;
             case 6:
                 _text = "Esta debería ser fácil ;)";
+                break;
+            case 7:
+                _text = "Un punto azul siempre debe\nver al menos otro azul";
+                break;
+            case 8:
+                _text = "Solo queda una\ndireccion posible";
+                break;
+            case 9:
+                _text = "Debe tener al menos\nun azul fijo";
                 break;
             default:
                 _text = "";
@@ -33,6 +44,10 @@ public class Hint {
 
     public String getText() {
         return _text;
+    }
+
+    public Vector2D getPos() {
+        return _cellPos;
     }
 
     private String _text;

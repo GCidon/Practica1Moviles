@@ -19,6 +19,7 @@ public class Logic implements gdv.ohno.engine.Logic {
     public void update(float deltaTime) throws Exception {
         if (_state == GameState.LEVEL && !_end) {
             if (_logicGame.getBoard().CheckWin() && _logicGame.getBoard().getCompletedPercentage() == 100) {
+                _logicGame.getBoard().fillingWin();
                 _end = true;
                 _logicGame.setEnd(true);
             }
@@ -135,8 +136,13 @@ public class Logic implements gdv.ohno.engine.Logic {
         }
     }
 
-    public LogicGame getLogicGame() {return _logicGame;}
-    public LogicMenu get_logicMenu() {return _logicMenu;}
+    public LogicGame getLogicGame() {
+        return _logicGame;
+    }
+
+    public LogicMenu get_logicMenu() {
+        return _logicMenu;
+    }
 
     public void getEngine(Engine engine) {
         _engine = engine;
