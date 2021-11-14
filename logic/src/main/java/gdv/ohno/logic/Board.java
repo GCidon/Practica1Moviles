@@ -24,7 +24,7 @@ public class Board {
     }
 
     public void GenerateBoard() {
-        int cellWidth = (int)(_windowWidth*0.9 / _size);
+        int cellWidth = (int) (_windowWidth * 0.9 / _size);
 
         //creamos una lista de numeros, indicando el indice de cada casilla
         ArrayList<Integer> listaRnd = new ArrayList<Integer>();
@@ -40,8 +40,8 @@ public class Board {
         for (int i = 0; i < minRed; i++) {
             boardx = listaRnd.get(i) / _size;
             boardy = listaRnd.get(i) % _size;
-            posx = boardx * cellWidth - (_windowWidth / 2) + (int)(_windowWidth*0.05);
-            posy = boardy * cellWidth - (_windowWidth / 2) + (int)(_windowWidth*0.05);
+            posx = boardx * cellWidth - (_windowWidth / 2) + (int) (_windowWidth * 0.05);
+            posy = boardy * cellWidth - (_windowWidth / 2) + (int) (_windowWidth * 0.05);
             _board[boardx][boardy] = new Cell(posx, posy, cellWidth, cellWidth, 0, Cell.Type.Red, new Vector2D(boardx, boardy), false);
             _board[boardx][boardy].setLogic(_logic);
             _board[boardx][boardy].setBoard(this);
@@ -50,8 +50,8 @@ public class Board {
         for (int i = minRed; i < listaRnd.size(); i++) {
             boardx = listaRnd.get(i) / _size;
             boardy = listaRnd.get(i) % _size;
-            posx = boardx * cellWidth - (_windowWidth / 2) + (int)(_windowWidth*0.05);
-            posy = boardy * cellWidth - (_windowWidth / 2) + (int)(_windowWidth*0.05);
+            posx = boardx * cellWidth - (_windowWidth / 2) + (int) (_windowWidth * 0.05);
+            posy = boardy * cellWidth - (_windowWidth / 2) + (int) (_windowWidth * 0.05);
             _board[boardx][boardy] = new Cell(posx, posy, cellWidth, cellWidth, 0, Cell.Type.Blue, new Vector2D(boardx, boardy), false);
             _board[boardx][boardy].setLogic(_logic);
             _board[boardx][boardy].setBoard(this);
@@ -81,7 +81,7 @@ public class Board {
                         _board[i][j].setType(Cell.Type.Red);
                         _board[i][j].setFixed(true);
                         _precompleted += 1;
-                        _fixedReds.add(new Vector2D(i,j));
+                        _fixedReds.add(new Vector2D(i, j));
                     }
                 }
             }
@@ -122,7 +122,8 @@ public class Board {
             _board[casillax][casillay].handleInput(e);
             //actualiza el contador de complecion
             if (_board[casillax][casillay].getType() == Cell.Type.Empty) _completed -= 1;
-            if (_board[casillax][casillay].getType() == Cell.Type.Blue && !_board[casillax][casillay].isFixed()) _completed += 1;
+            if (_board[casillax][casillay].getType() == Cell.Type.Blue && !_board[casillax][casillay].isFixed())
+                _completed += 1;
         }
     }
 
@@ -153,8 +154,7 @@ public class Board {
                     _board[i][j].setNumber(countAdjacent(i, j));
                     _board[i][j].setFixed(true);
 
-                } else if (_board[i][j].getType() == Cell.Type.Empty || _board[i][j].getType() == Cell.Type.Red) {
-                    _board[i][j].setType(Cell.Type.Red);
+                } else if (!_board[i][j].isFixed()) {
                     _board[i][j].setFixed(true);
                 }
 
@@ -217,7 +217,7 @@ public class Board {
         if (!outOfBoard(newPos)) {
             if (_board[newPos.x][newPos.y].getType() == Cell.Type.Blue && _board[newPos.x][newPos.y].isFixed()) {
                 return true;
-            } else if(_board[newPos.x][newPos.y].getType() == Cell.Type.Red) return false;
+            } else if (_board[newPos.x][newPos.y].getType() == Cell.Type.Red) return false;
             else return findFixedBlue(newPos, dir);
         }
         return false;
@@ -236,13 +236,11 @@ public class Board {
 
         Vector2D newPos = Vector2D.sum(pos, dir);
 
-        if (!outOfBoard(newPos)) {
-            while (!outOfBoard(newPos)) {
-                newPos = Vector2D.sum(newPos, dir);
-                if (_board[newPos.x][newPos.y].getType() == type) {
-                    c = _board[newPos.x][newPos.y];
-                }
+        while (!outOfBoard(newPos)) {
+            if (_board[newPos.x][newPos.y].getType() == type) {
+                c = _board[newPos.x][newPos.y];
             }
+            newPos = Vector2D.sum(newPos, dir);
         }
 
         return c;
@@ -296,13 +294,14 @@ public class Board {
     }
 
     public void clickFixedReds() {
-        if(!_fixedReds.isEmpty()) {
+        if (!_fixedReds.isEmpty()) {
             for (Vector2D c : _fixedReds) _board[c.x][c.y].setClicked();
         }
     }
 
     public boolean areFixedClicked() {
-        if(!_fixedReds.isEmpty()) return _board[_fixedReds.get(0).x][_fixedReds.get(0).y].isClicked();
+        if (!_fixedReds.isEmpty())
+            return _board[_fixedReds.get(0).x][_fixedReds.get(0).y].isClicked();
         else return false;
     }
 

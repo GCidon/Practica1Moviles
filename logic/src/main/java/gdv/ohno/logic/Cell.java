@@ -24,7 +24,10 @@ public class Cell extends GameObject {
     public boolean isFixed() {
         return _fixed;
     }
-    public boolean isClicked() {return _clicked;}
+
+    public boolean isClicked() {
+        return _clicked;
+    }
 
     public Type getType() {
         return _type;
@@ -58,9 +61,13 @@ public class Cell extends GameObject {
         _hinted = h;
     }
 
-    public void setClicked() {_clicked = !_clicked; }
+    public void setClicked() {
+        _clicked = !_clicked;
+    }
 
-    public void setBoard(Board board) { _board = board; }
+    public void setBoard(Board board) {
+        _board = board;
+    }
 
     public void update(float deltaTime) {
 
@@ -69,7 +76,7 @@ public class Cell extends GameObject {
     public void render(Graphics g) {
         if (_hinted) {
             g.setColor(0xFF000000);
-            g.fillCircle(_x, _y, (int) _w + 3);
+            g.fillCircle(_x - 3, _y - 3, (int) _w + 6);
         }
 
         g.setColor(Colors[_type.ordinal()]);
@@ -80,8 +87,8 @@ public class Cell extends GameObject {
             g.drawText(Integer.toString(_n), (int) (_x + _w / 3), (int) (-_y - _h / 3));
         }
 
-        if(_type == Type.Red && _fixed && _clicked) {
-            g.drawImage(_logic.getLogicGame().getImage(3), (int)(_x+(_w*3/4)), (int)(_y+(_h*3/4)), (int)(-_w*0.75) , (int) (-_h*0.75));
+        if (_type == Type.Red && _fixed && _clicked) {
+            g.drawImage(_logic.getLogicGame().getImage(3), (int) (_x + (_w * 3 / 4)), (int) (_y + (_h * 3 / 4)), (int) (-_w * 0.75), (int) (-_h * 0.75));
         }
     }
 
@@ -90,7 +97,7 @@ public class Cell extends GameObject {
     }
 
     public void changeColor() {
-        if(!_fixed) {
+        if (!_fixed) {
             switch (_type) {
                 case Empty:
                     _type = Type.Blue;
@@ -104,10 +111,10 @@ public class Cell extends GameObject {
                 default:
                     break;
             }
-            if(_board.areFixedClicked())
+            if (_board.areFixedClicked())
                 _board.clickFixedReds();
         } else {
-            if(!_board.areFixedClicked())
+            if (!_board.areFixedClicked())
                 _board.clickFixedReds();
         }
     }

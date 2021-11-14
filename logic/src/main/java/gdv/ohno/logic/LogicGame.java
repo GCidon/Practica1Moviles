@@ -3,6 +3,7 @@ package gdv.ohno.logic;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+import java.util.Vector;
 
 import gdv.ohno.engine.Engine;
 import gdv.ohno.engine.Font;
@@ -23,7 +24,7 @@ public class LogicGame {
         if (size < 30) size = 30;
         _fonts[0] = _engine.getGraphics().newFont("fonts/JosefinSans-Bold.ttf", size, true);
         _fonts[1] = _engine.getGraphics().newFont("fonts/JosefinSans-Bold.ttf", 20, true);
-        _fonts[2] = _engine.getGraphics().newFont("fonts/JosefinSans-Bold.ttf", size/2, true);
+        _fonts[2] = _engine.getGraphics().newFont("fonts/JosefinSans-Bold.ttf", size / 2, true);
 
         _images[0] = _engine.getGraphics().newImage("sprites/eye.png");
         _images[1] = _engine.getGraphics().newImage("sprites/close.png");
@@ -53,13 +54,13 @@ public class LogicGame {
         } else if (_hint && !_end) {
             g.setFont(_fonts[2]);
             String[] ss = _hintText.split("\n");
-            for(int i = 0; i < ss.length; i++) {
-                g.drawText(ss[i], ss[i].length()*-6, -220+i*30);
+            for (int i = 0; i < ss.length; i++) {
+                g.drawText(ss[i], ss[i].length() * -6, -220 + i * 30);
             }
         } else {
             //texto de ganar partida
             text = "¡Bien hecho!";
-            g.drawText(text, text.length()*-12, (int) (-200));
+            g.drawText(text, text.length() * -12, (int) (-200));
         }
 
         //texto de porcentaje
@@ -88,7 +89,10 @@ public class LogicGame {
 
     public void handleInput(List<Input.TouchEvent> te) throws Exception {
         for (Input.TouchEvent e : te) {
-            _hint = false;
+            if (_hint) {
+                _hint = false;
+                _board.getBoard()[_lastHinted.x][_lastHinted.y].setHinted(_hint);
+            }
             _board.handleInput(e);
             for (int i = 0; i < _buttons.size(); i++) {
                 _buttons.get(i).handleInput(e);
@@ -105,8 +109,11 @@ public class LogicGame {
     }
 
     public void getHint() {
-        _hintText = _manager.getHint().getText();
+        Hint hint = _manager.getHint();
+        _hintText = hint.getText();
+        _lastHinted = hint.getPos();
         _hint = true;
+        _board.getBoard()[_lastHinted.x][_lastHinted.y].setHinted(_hint);
     }
 
     public void setEnd(boolean aux) {
@@ -128,6 +135,7 @@ public class LogicGame {
     Board _board;
     HintManager _manager;
     String _hintText = "";
+    Vector2D _lastHinted = null;
 
     Engine _engine;
     Logic _logica;
