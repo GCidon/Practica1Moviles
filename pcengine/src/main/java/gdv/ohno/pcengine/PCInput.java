@@ -12,17 +12,18 @@ public class PCInput implements Input {
         public MouseEventHandler() {
         }
 
+        //Solo detectaremos la pulsacion estandar del raton, ya que para el juego no es necesaria la deteccion de otra distinta
         public void mousePressed(MouseEvent e) {
-            TouchEvent aux = new TouchEvent(e.getButton(), TouchEvent.Type.PULSACION, e.getX(), e.getY());
+            TouchEvent aux = new TouchEvent(e.getButton(), e.getX(), e.getY());
             _touchEvents.add(aux);
         }
 
-        //Solo detectaremos la pulsacion standard del raton, ya que para el juego no es necesaria la deteccion de otra distinta
         public void mouseClicked(MouseEvent e) {
 
         }
 
         public void mouseReleased(MouseEvent e) {
+
         }
 
         public void mouseEntered(MouseEvent e) {
@@ -36,8 +37,6 @@ public class PCInput implements Input {
     }
 
     public PCInput() {
-        _handler = new MouseEventHandler();
-        _touchEvents = new ArrayList();
     }
 
     @Override
@@ -45,6 +44,11 @@ public class PCInput implements Input {
         ArrayList<TouchEvent> aux = new ArrayList<TouchEvent>(_touchEvents);
         _touchEvents.clear();
         return aux;
+    }
+
+    public void init() {
+        _handler = new MouseEventHandler();
+        _touchEvents = new ArrayList();
     }
 
     MouseEventHandler _handler;

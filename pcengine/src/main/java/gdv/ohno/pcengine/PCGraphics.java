@@ -25,8 +25,6 @@ public class PCGraphics implements Graphics {
 
     }
 
-    //Creamos una nueva fuente y la aplicamos
-
     @Override
     public PCFont newFont(String filename, float size, boolean isBold) throws Exception {
         return new PCFont(filename, size, isBold);

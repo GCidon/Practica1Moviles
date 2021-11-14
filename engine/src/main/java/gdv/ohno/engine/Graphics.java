@@ -12,7 +12,7 @@ public interface Graphics {
     public void save();
     public void restore();
 
-    //x, y posiciones originales - x2, y2 posicion esquina contraria
+    //x, y posiciones originales - x2, y2 ancho y alto
     public void drawImage(Image image, int x, int y, int x2, int y2);
 
     //dx, dy, dx2, dy2 posiciones en pantalla - sx, sy, sx2, sy2 posiciones de imagen
@@ -20,10 +20,8 @@ public interface Graphics {
 
     public void setColor(int color);
 
-    //drawOval(x, y, radio, radio)
     public void fillCircle(int x, int y, int r);
 
-    public void drawLine(int x1, int y1, int x2, int y2);
     public void fillRect(int x1, int y1, int x2, int y2);
 
     public void drawText(String text, int x, int y);

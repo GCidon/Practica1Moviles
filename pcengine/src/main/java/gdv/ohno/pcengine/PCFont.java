@@ -7,10 +7,9 @@ import gdv.ohno.engine.Font;
 public class PCFont extends Frame implements Font {
     public PCFont(String is, float _size, boolean _isBold) throws Exception {
         java.awt.Font auxFont;
-
         try
         {
-            auxFont = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, new File("assets/"+ is));
+            auxFont = java.awt.Font.createFont(java.awt.Font.TRUETYPE_FONT, new File("data/"+ is));
         }
         catch(Exception e)
         {

@@ -6,6 +6,7 @@ import gdv.ohno.engine.Input;
 public class Cell extends GameObject {
     enum Type {Empty, Blue, Red}
 
+    //Colores posibles: Gris, Azul, Rojo
     protected int[] Colors = {0xFFEEEEEE, 0xFF45CCFF, 0xFFFF3C54};
 
     public Cell(int x, int y, int w, int h, int n, Type type, Vector2D pos, boolean fixed) {
@@ -35,10 +36,6 @@ public class Cell extends GameObject {
 
     public Vector2D getPos() {
         return _pos;
-    }
-
-    public void setPos(Vector2D pos) {
-        _pos = pos;
     }
 
     public void setNumber(int n) {
@@ -74,21 +71,29 @@ public class Cell extends GameObject {
     }
 
     public void render(Graphics g) {
+        //Circulo negro alrededor de la celda (en el caso de que se haya activado pista o deshacer
         if (_hinted) {
             g.setColor(0xFF000000);
             g.fillCircle(_x - 3, _y - 3, (int) _w + 6);
         }
 
+        //Cuerpo
         g.setColor(Colors[_type.ordinal()]);
         g.fillCircle(_x, _y, (int) _w);
 
+        //Numero de la casilla (si tiene)
         if (_n != 0) {
             g.setColor(0xFFFFFFFF);
-            g.drawText(Integer.toString(_n), (int) (_x + _w / 3), (int) (-_y - _h / 3));
+            g.drawText(Integer.toString(_n), (int) (_x + _w * 0.3), (int) (-_y - _h * 0.3));
         }
 
+        //Dibujo de candado (si tiene)
         if (_type == Type.Red && _fixed && _clicked) {
-            g.drawImage(_logic.getLogicGame().getImage(3), (int) (_x + (_w * 0.875) ), (int) (_y +(_h *0.875) ), (int) (-_w * 0.75), (int) (-_h * 0.75));
+            g.save();
+            g.scale(-1);
+            g.rotate(180);
+            g.drawImage(_logic.getLogicGame().getImage(3), (int) (_x + (_w * 0.125) ), (int) -(_y + (_h *0.875) ), (int) (_w * 0.75), (int) (_h * 0.75));
+            g.restore();
         }
     }
 
@@ -96,6 +101,7 @@ public class Cell extends GameObject {
         changeColor();
     }
 
+    //Metodo de cambio de color y activacion/desactivacion de celdas fijas
     public void changeColor() {
         if (!_fixed) {
             switch (_type) {
@@ -119,13 +125,13 @@ public class Cell extends GameObject {
         }
     }
 
-
     protected int _n;
-    protected boolean _fixed = false, _hinted = false, _clicked = false;
+    protected boolean _fixed = false, _hinted = false, _clicked;
     protected Type _type;
     protected Logic _logic;
     protected Vector2D _pos;
     protected Board _board;
+
 }
 
 

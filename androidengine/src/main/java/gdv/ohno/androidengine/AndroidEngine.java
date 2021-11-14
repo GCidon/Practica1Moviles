@@ -2,6 +2,7 @@ package gdv.ohno.androidengine;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -45,8 +46,9 @@ public class AndroidEngine implements Engine, Runnable {
 
     //Bucle principal
     public boolean running() throws Exception {
-        //Inicializamos variables y clases que usaremos
         _input = new AndroidInput();
+        _input.setEngine(this);
+        _input.init();
         _ag = new AndroidGraphics();
         _ag.getContext(context);
         logica.init();
@@ -56,6 +58,7 @@ public class AndroidEngine implements Engine, Runnable {
         while (_running) {
             canvas = _holder.lockCanvas();
             _ag.setCanvas(canvas);
+            setSizes(canvas.getWidth(), canvas.getHeight());
             double currentTime = System.nanoTime();
             double deltaTime = (currentTime - lastTime) / 1e9;
             update(deltaTime);
@@ -76,16 +79,13 @@ public class AndroidEngine implements Engine, Runnable {
         return true;
     }
 
-
     public void getContext(Context _context) {
         context = _context;
     }
 
-
     @Override
     //Sistema de threads y ejecuta el runnning()
     public void run() {
-
         if (_renderThread != Thread.currentThread()) {
             throw new RuntimeException("run() should not be called directly");
         }
@@ -100,7 +100,6 @@ public class AndroidEngine implements Engine, Runnable {
         }
     }
 
-    //Pausa
     public void pause() {
         if (_running) {
             _running = false;
@@ -124,6 +123,17 @@ public class AndroidEngine implements Engine, Runnable {
         }
     }
 
+    void setSizes(int w, int h) {
+        _windowWidth = w;
+        _windowHeight = h;
+    }
+
+    public int getWidth() { return _windowWidth; }
+    public int getHeight() { return _windowHeight; }
+
+    public float getProportion() {
+        return _ag.calculateSize();
+    }
 
     Thread _renderThread;
 
@@ -136,5 +146,8 @@ public class AndroidEngine implements Engine, Runnable {
     SurfaceHolder _holder;
     SurfaceView _sv;
     AndroidInput _input;
+
+    int _windowWidth;
+    int _windowHeight;
 
 }

@@ -13,13 +13,11 @@ public class AndroidGraphics implements Graphics {
 
     public void setCanvas(Canvas canvas) {
         _c = canvas;
-        //_font = new AndroidFont[25];
         //grosor de lineas
-        _p.setStrokeWidth((float) 1.5);
+        _p.setStrokeWidth((float) 1);
     }
 
     @Override
-    //Creamos una nueva fuente, si esta no ha sido creada ya y la aplicamos
     public AndroidFont newFont(String filename, float size, boolean isBold) throws Exception {
         AndroidFont ret = new AndroidFont(filename, size, isBold, context);
         return ret;
@@ -59,14 +57,8 @@ public class AndroidGraphics implements Graphics {
         _c.restore();
     }
 
-    //Elegimos en un principio introducir un string del color en vez de su valor RGBA directamente ya que consideramos
-    //que de esta manera nos facilitaria el trabajo a la hora de escoger el color adecuado desde la logica.
     public void setColor(int color) {
         _p.setColor(color);
-    }
-
-    public void drawLine(int x1, int y1, int x2, int y2) {
-        _c.drawLine(x1, y1, x2, y2, _p);
     }
 
     public void fillRect(int x1, int y1, int x2, int y2) {
@@ -75,6 +67,7 @@ public class AndroidGraphics implements Graphics {
     }
 
     public void fillCircle(int x, int y, int r) {
+        //Calculamos proporciones para el circulo
         float baseProportion = getBaseWidth()/getBaseHeight();
         float proportion = getWidth()/getHeight();
         int radius = (int)((r*proportion)/baseProportion);
@@ -102,7 +95,7 @@ public class AndroidGraphics implements Graphics {
     public void drawFramedImage(Image image, int dx, int dy, int dx2, int dy2, int sx, int sy, int sx2, int sy2) {
         AndroidImage img = (AndroidImage)image;
         Rect r = new Rect(dx, dy, dx+dx2, dy+dy2);
-        Rect d = new Rect(sx,sy, sx2, sy2);
+        Rect d = new Rect(sx,sy, sx+sx2, sy+sy2);
         _c.drawBitmap(img.getImage(), d, r, _p);
     }
 
@@ -151,8 +144,6 @@ public class AndroidGraphics implements Graphics {
 
     float width_;
     float height_;
-    //Array de fuentes creadas
-    //AndroidFont[] _font;
     Canvas _c;
     Context context;
     Paint _p = new Paint();

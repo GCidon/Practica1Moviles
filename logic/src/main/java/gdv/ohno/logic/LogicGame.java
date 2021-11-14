@@ -20,24 +20,30 @@ public class LogicGame {
     }
 
     public void init() throws Exception {
+        //Auxiliares para tamaños de fuente
         int size = 10 * (10 - _boardSize);
         if (size < 30) size = 30;
+
+        //Fuentes
         _fonts[0] = _engine.getGraphics().newFont("fonts/JosefinSans-Bold.ttf", size, true);
         _fonts[1] = _engine.getGraphics().newFont("fonts/JosefinSans-Bold.ttf", 20, true);
         _fonts[2] = _engine.getGraphics().newFont("fonts/JosefinSans-Bold.ttf", size / 2, true);
 
+        //Imagenes
         _images[0] = _engine.getGraphics().newImage("sprites/eye.png");
         _images[1] = _engine.getGraphics().newImage("sprites/close.png");
         _images[2] = _engine.getGraphics().newImage("sprites/history.png");
         _images[3] = _engine.getGraphics().newImage("sprites/lock.png");
 
+        //Botones
         _buttons.add(new Button(-125, 275, 50, 50, "cancel", _logica));
         _buttons.add(new Button(-25, 275, 50, 50, "undo", _logica));
         _buttons.add(new Button(75, 275, 50, 50, "hint", _logica));
 
-        _board = new Board(_boardSize, (int) _engine.getGraphics().getBaseWidth());
+        _board = new Board(_boardSize, (int)_engine.getGraphics().getBaseWidth());
         _board.setLogic(_logica);
         _board.GenerateBoard();
+
         _manager = new HintManager(_board);
     }
 
@@ -48,28 +54,29 @@ public class LogicGame {
         g.setColor(0xFF000000);
         String text;
         if (!_end && !_hint) {
-            //texto de tamaño de tablero
+            //Texto de tamaño de tablero
             text = _board.getSize() + "x" + _board.getSize();
             g.drawText(text, (int) (-40), (int) (-220));
         } else if (_hint && !_end) {
+            //Texto de pista o deshacer
             g.setFont(_fonts[2]);
             String[] ss = _hintText.split("\n");
             for (int i = 0; i < ss.length; i++) {
                 g.drawText(ss[i], ss[i].length() * -6, -220 + i * 30);
             }
         } else {
-            //texto de ganar partida
+            //Texto de ganar partida
             text = "¡Bien hecho!";
             g.drawText(text, text.length() * -12, (int) (-200));
         }
 
-        //texto de porcentaje
+        //Texto de porcentaje
         g.setFont(_fonts[1]);
         g.setColor(0xFFC1C1C1);
         String completedText = _board.getCompletedPercentage() + "%";
         g.drawText(completedText, (int) (-10), (int) (215));
 
-        //imagenes de botones
+        //Imagenes de botones
         g.save();
         g.scale(-1);
         g.rotate(180);
@@ -78,10 +85,11 @@ public class LogicGame {
         g.drawImage(_images[2], -25, 220, 50, 50);
         g.restore();
 
-        //tablero
+        //Tablero
         g.setFont(_fonts[0]);
         _board.render(g);
 
+        //Necesario para escalado
         for (int i = 0; i < _buttons.size(); i++) {
             _buttons.get(i).render(g);
         }
@@ -89,6 +97,11 @@ public class LogicGame {
 
     public void handleInput(List<Input.TouchEvent> te) throws Exception {
         for (Input.TouchEvent e : te) {
+            if(_undo) {
+                _hint = false;
+                _undo = false;
+                if(_lastHinted.x != -1) _board.getBoard()[_lastHinted.x][_lastHinted.y].setHinted(_hint);
+            }
             if (_hint) {
                 _hint = false;
                 _board.getBoard()[_lastHinted.x][_lastHinted.y].setHinted(_hint);
@@ -108,12 +121,23 @@ public class LogicGame {
         return _board;
     }
 
+    //Devuelve una pista aleatoria, activa la casilla correspondiente y cambia el texto
     public void getHint() {
         Hint hint = _manager.getHint();
         _hintText = hint.getText();
         _lastHinted = hint.getPos();
         _hint = true;
         _board.getBoard()[_lastHinted.x][_lastHinted.y].setHinted(_hint);
+    }
+
+    //Deshace el ultimo movimiento, activa la casilla correspondiente y cambia el texto
+    public void getUndo(int type, Vector2D pos) {
+        Undo undo = new Undo(type, pos);
+        _hintText = undo.getText();
+        _hint = true;
+        _undo = true;
+        _lastHinted = pos;
+        if(pos.x != -1) _board.getBoard()[pos.x][pos.y].setHinted(_undo);
     }
 
     public void setEnd(boolean aux) {
@@ -128,6 +152,7 @@ public class LogicGame {
 
     boolean _end = false;
     boolean _hint = false;
+    boolean _undo = false;
 
     List<Button> _buttons;
     Font _fonts[] = new Font[3];

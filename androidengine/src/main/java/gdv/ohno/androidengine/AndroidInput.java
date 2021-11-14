@@ -9,20 +9,20 @@ import gdv.ohno.engine.Input;
 
 public class AndroidInput implements Input {
     class TouchListener implements View.OnTouchListener {
-        TouchListener() {
-
+        TouchListener(AndroidEngine engine) {
+            _engine = engine;
         }
 
         @Override
         //Solo detectaremos la pulsacion standard de la pantalla, ya que para el juego no es necesaria la deteccion de otra distinta
         public boolean onTouch(View v, MotionEvent event) {
             if(event.getAction() == MotionEvent.ACTION_DOWN) {
-                Input.TouchEvent aux = new Input.TouchEvent(event.getActionIndex(), Input.TouchEvent.Type.PULSACION, (int) event.getX(), (int) event.getY());
+                Input.TouchEvent aux = new Input.TouchEvent(event.getActionIndex(), (int)event.getX(), (int)event.getY());
                 _touchEvents.add(aux);
-                System.out.println(aux.getPosX());
-                System.out.println(aux.getPosY());
             } return true;
         }
+
+        AndroidEngine _engine;
     }
 
     @Override
@@ -33,10 +33,18 @@ public class AndroidInput implements Input {
     }
 
     AndroidInput() {
-        _listener = new TouchListener();
+    }
+
+    public void init() {
+        _listener = new TouchListener(_engine);
         _touchEvents = new ArrayList();
+    }
+
+    public void setEngine(AndroidEngine engine) {
+        _engine = engine;
     }
 
     public TouchListener _listener;
     List<Input.TouchEvent> _touchEvents;
+    AndroidEngine _engine;
 }

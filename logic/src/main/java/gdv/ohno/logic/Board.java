@@ -24,6 +24,7 @@ public class Board {
     }
 
     public void GenerateBoard() {
+        //Tamaño de las celdas
         int cellWidth = (int) (_windowWidth * 0.9 / _size);
 
         //creamos una lista de numeros, indicando el indice de cada casilla
@@ -107,20 +108,9 @@ public class Board {
 
     public void handleInput(Input.TouchEvent e) throws Exception {
         //Transformacion de la pulsacion a posicion del tablero
-        int aux1=(int)_logic._engine.getGraphics().getWidth();
-        int aux2=(int)_logic._engine.getGraphics().getHeight();
-        int aux3 = e.getPosX();
-        int aux4 = e.getPosY();
-        float ratonx = (e.getPosX() - _logic._engine.getGraphics().getWidth() / 2) - _inix;
-        float ratony = (_logic._engine.getGraphics().getHeight() / 2 - e.getPosY()) - _iniy;
-
-        System.out.println(aux1);
-        System.out.println(aux2);
-        System.out.println(aux3);
-        System.out.println(aux4);
-        System.out.println(ratonx);
-        System.out.println(ratony);
-        System.out.println("-------------------------------");
+        float proporcionEngine = _logic._engine.getProportion();
+        float ratonx = (e.getPosX() - _logic._engine.getGraphics().getWidth() / 2)/proporcionEngine - _inix;
+        float ratony = (_logic._engine.getGraphics().getHeight() / 2 - e.getPosY())/proporcionEngine - _iniy;
 
         //Comprobar si la pulsacion esta dentro del tablero
         if (ratony > 0 && ratony < _windowWidth && ratonx > 0 && ratonx < _windowWidth) {
@@ -160,6 +150,7 @@ public class Board {
         return true;
     }
 
+    //Rellenar el tablero una vez se gana la partida
     public void fillingWin() {
         for (int j = 0; j < _size; j++) {
             for (int i = 0; i < _size; i++) {
@@ -179,14 +170,7 @@ public class Board {
         return _size;
     }
 
-    /**
-     * Returns the count of the specified cell type in the specified direction from the origin position
-     * It goes recursively through all the board in the specified direction.
-     *
-     * @param pos the initial pos.
-     * @param dir the direction to path in the board.
-     * @return the total count.
-     */
+    //Devuelve el numero de celdas azules desde la posicion pos en la direccion dir
     int count(Vector2D pos, Vector2D dir) {
         int n = 0;
 
@@ -201,7 +185,7 @@ public class Board {
         return n;
     }
 
-    //cuenta las casillas azules que ve la casilla indicada en las cuatro direcciones
+    //Cuenta las casillas azules que ve la casilla indicada en las cuatro direcciones
     int countAdjacent(int x, int y) {
         int res = 0;
 
@@ -213,7 +197,7 @@ public class Board {
         return res;
     }
 
-    //comprueba si la casilla indicada no ve azules fijas, y por lo tanto, tiene que ser roja
+    //Comprueba si la casilla indicada no ve azules fijas, y por lo tanto, tiene que ser roja
     boolean checkRed(int x, int y) {
 
         if (findFixedBlue(new Vector2D(x, y), new Vector2D(0, 1))) return false;
@@ -224,7 +208,7 @@ public class Board {
         return true;
     }
 
-    //metodo recursivo para encontrar una casilla azul fija en una direccion dada
+    //Metodo recursivo para encontrar una casilla azul fija en una direccion dada
     boolean findFixedBlue(Vector2D pos, Vector2D dir) {
         Vector2D newPos = Vector2D.sum(pos, dir);
         if (!outOfBoard(newPos)) {
@@ -236,14 +220,7 @@ public class Board {
         return false;
     }
 
-    /**
-     * Looks for the cell of the given type in the specified direction
-     *
-     * @param pos  the initial pos
-     * @param dir  the direction to path
-     * @param type the cell type to look for
-     * @return the first cell of the given type in the specified direction
-     */
+    //Busca un tipo de celda especifico en una direccion
     public Cell lookForCell(Vector2D pos, Vector2D dir, Cell.Type type) {
         Cell c = null;
 
@@ -259,13 +236,7 @@ public class Board {
         return c;
     }
 
-    /**
-     * Gets the next cell in the given direction
-     *
-     * @param pos
-     * @param dir
-     * @return
-     */
+    //Devuelve la celda adyacente a la dada en una direccion
     public Cell nextCell(Vector2D pos, Vector2D dir) {
         Cell c = null;
 
@@ -286,32 +257,52 @@ public class Board {
         _logic = logic;
     }
 
+    //Comprueba si la celda especificada esta fuera del tablero
     public boolean outOfBoard(Vector2D pos) {
         if (pos.x < 0 || pos.x >= _size || pos.y < 0 || pos.y >= _size)
             return true;
         else return false;
     }
 
+    //Porcentaje de celdas completadas
     public int getCompletedPercentage() {
         return (_completed * 100) / ((_size * _size) - _precompleted);
     }
 
+    //Deshacer movimiento, indica a la logica el movimiento que se ha deshecho
     public void undoMove() {
+        int type = 0;
+        Vector2D move = new Vector2D(-1,-1);
         if (!_moves.empty()) {
-            Vector2D move = _moves.pop();
+            move = _moves.pop();
             _board[move.x][move.y].changeColor();
             _board[move.x][move.y].changeColor();
-            if (_board[move.x][move.y].getType() == Cell.Type.Empty) _completed -= 1;
-            if (_board[move.x][move.y].getType() == Cell.Type.Blue) _completed += 1;
+            if (_board[move.x][move.y].getType() == Cell.Type.Empty) {
+                type = 3;
+                _completed -= 1;
+            }
+            else if (_board[move.x][move.y].getType() == Cell.Type.Blue) {
+                type = 1;
+            }
+            else {
+                type = 2;
+                _completed+=1;
+            }
+            _board[move.x][move.y].setHinted(true);
+        } else {
+            type = 4;
         }
+        _logic.getLogicGame().getUndo(type, move);
     }
 
+    //Activa o desactiva las celdas fijas para dibujado de candado (en el caso de las rojas)
     public void clickFixedReds() {
         if (!_fixedReds.isEmpty()) {
             for (Vector2D c : _fixedReds) _board[c.x][c.y].setClicked();
         }
     }
 
+    //Comprueba si las celdas fijas estan activadas
     public boolean areFixedClicked() {
         if (!_fixedReds.isEmpty())
             return _board[_fixedReds.get(0).x][_fixedReds.get(0).y].isClicked();

@@ -5,9 +5,6 @@ import gdv.ohno.engine.Graphics;
 import gdv.ohno.engine.Input;
 import gdv.ohno.engine.Logic;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
-
 import javax.swing.JFrame;
 
 public class PCEngine implements Engine {
@@ -24,22 +21,9 @@ public class PCEngine implements Engine {
         return _input;
     }
 
-    public InputStream openInputStream(String filename) {
-        InputStream is = null;
-        try {
-            is = new FileInputStream("assets/" + filename);
-        } catch (Exception e) {
-            System.err.println("Error cargando el archivo: " + e);
-            return null;
-        }
-        return is;
-    }
-
-
     public void update(double deltaTime) throws Exception {
         logica.update((float) deltaTime);
     }
-
 
     public void render(Graphics g) throws Exception {
         _graphics.clear(0xFFFFFFFF);
@@ -57,13 +41,14 @@ public class PCEngine implements Engine {
 
         _graphics = new PCGraphics(_frame);
         _input = new PCInput();
+        _input.init();
         _frame.addMouseListener(_input._handler);
         boolean _running = true;
 
         long lastTime = System.nanoTime();
         logica.init();
 
-
+        //Bucle principal
         while (_running) {
             long currentTime = System.nanoTime();
             double nanoElapsedTime = currentTime - lastTime;
@@ -89,6 +74,10 @@ public class PCEngine implements Engine {
             } while (_frame.getBufferStrategy().contentsLost());
         }
         return true;
+    }
+
+    public float getProportion() {
+        return _graphics.calculateSize();
     }
 
     protected PCGraphics _graphics;

@@ -13,7 +13,7 @@ public class PCImage implements Image {
     public PCImage(String name) throws Exception {
         _image = null;
         try {
-            _image = ImageIO.read(new File("assets/"+name));
+            _image = ImageIO.read(new File("data/"+name));
         } catch (IOException e) {
             System.err.println("Error cargando la imagen: " + e);
             return;

@@ -19,14 +19,17 @@ public class LogicMenu {
     }
 
     public void init() throws Exception {
+        //Fuentes
         _fonts[0] = _engine.getGraphics().newFont("fonts/JosefinSans-Bold.ttf", 50, true);
         _fonts[1] = _engine.getGraphics().newFont("fonts/Molle-Regular.ttf", 100, false);
         _fonts[2] = _engine.getGraphics().newFont("fonts/JosefinSans-Bold.ttf", 15, true);
         _fonts[3] = _engine.getGraphics().newFont("fonts/JosefinSans-Bold.ttf", 25, true);
 
+        //Imagenes
         _images[0] = _engine.getGraphics().newImage("sprites/close.png");
         _images[1] = _engine.getGraphics().newImage("sprites/q42.png");
 
+        //Botones
         _buttons.add(new Button(-50, 0, 110, 50, "select", _logica));
         _buttons.add(new Button(-120, 0, 75, 75, "level4", _logica));
         _buttons.add(new Button(-40, 0, 75, 75, "level5", _logica));
@@ -35,7 +38,6 @@ public class LogicMenu {
         _buttons.add(new Button(-40, 80, 75, 75, "level8", _logica));
         _buttons.add(new Button(40, 80, 75, 75, "level9", _logica));
         _buttons.add(new Button(-20, 220, 50, 50, "cancel", _logica));
-
     }
 
     //Renderizamos todo el texto
@@ -70,6 +72,7 @@ public class LogicMenu {
             int inix = -120;
             int iniy = 0;
             int color = 0xFF000000;
+
             //casillas de eleccion de tamaño de tablero
             for(int i = 0; i < 6; i++) {
                 if(i >= 3) iniy = 80;

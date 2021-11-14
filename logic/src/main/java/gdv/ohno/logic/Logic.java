@@ -18,12 +18,14 @@ public class Logic implements gdv.ohno.engine.Logic {
 
     public void update(float deltaTime) throws Exception {
         if (_state == GameState.LEVEL && !_end) {
+            //Comprobacion de victoria
             if (_logicGame.getBoard().CheckWin() && _logicGame.getBoard().getCompletedPercentage() == 100) {
                 _logicGame.getBoard().fillingWin();
                 _end = true;
                 _logicGame.setEnd(true);
             }
         } else if (_state == GameState.LEVEL) {
+            //Cambio de estado a menu principal
             if (_timer > _transitionTime) {
                 startMenu();
                 _logicMenu.setSelecting(true);
@@ -105,22 +107,12 @@ public class Logic implements gdv.ohno.engine.Logic {
                 selectLevel();
                 break;
             case "level4":
-                startGame(4);
-                break;
             case "level5":
-                startGame(5);
-                break;
             case "level6":
-                startGame(6);
-                break;
             case "level7":
-                startGame(7);
-                break;
             case "level8":
-                startGame(8);
-                break;
             case "level9":
-                startGame(9);
+                startGame(action.charAt(5)-'0');
                 break;
             case "cancel":
                 startMenu();
@@ -136,11 +128,9 @@ public class Logic implements gdv.ohno.engine.Logic {
         }
     }
 
-    public LogicGame getLogicGame() {
-        return _logicGame;
-    }
+    public LogicGame getLogicGame() { return _logicGame; }
 
-    public LogicMenu get_logicMenu() {
+    public LogicMenu getLogicMenu() {
         return _logicMenu;
     }
 

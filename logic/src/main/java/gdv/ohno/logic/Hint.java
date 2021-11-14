@@ -1,9 +1,6 @@
 package gdv.ohno.logic;
 
-import org.graalvm.compiler.phases.verify.VerifyUsageWithEquals;
-
-import java.util.Vector;
-
+//Clase de textos de pistas
 public class Hint {
     public Hint(int type, Vector2D pos) {
         switch (type) {
@@ -32,7 +29,7 @@ public class Hint {
                 _text = "Solo queda una\ndireccion posible";
                 break;
             case 9:
-                _text = "Debe tener al menos\nun azul fijo";
+                _text = "Debe tener al menos\nun azul con numero";
                 break;
             default:
                 _text = "";
