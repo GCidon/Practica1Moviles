@@ -42,7 +42,7 @@ public class Board {
             boardy = listaRnd.get(i) % _size;
             posx = boardx * cellWidth - (_windowWidth / 2) + (int) (_windowWidth * 0.05);
             posy = boardy * cellWidth - (_windowWidth / 2) + (int) (_windowWidth * 0.05);
-            _board[boardx][boardy] = new Cell(posx, posy, cellWidth, cellWidth, 0, Cell.Type.Red, new Vector2D(boardx, boardy), false);
+            _board[boardx][boardy] = new Cell(posx, posy, cellWidth - 5, cellWidth - 5, 0, Cell.Type.Red, new Vector2D(boardx, boardy), false);
             _board[boardx][boardy].setLogic(_logic);
             _board[boardx][boardy].setBoard(this);
         }
@@ -52,7 +52,7 @@ public class Board {
             boardy = listaRnd.get(i) % _size;
             posx = boardx * cellWidth - (_windowWidth / 2) + (int) (_windowWidth * 0.05);
             posy = boardy * cellWidth - (_windowWidth / 2) + (int) (_windowWidth * 0.05);
-            _board[boardx][boardy] = new Cell(posx, posy, cellWidth, cellWidth, 0, Cell.Type.Blue, new Vector2D(boardx, boardy), false);
+            _board[boardx][boardy] = new Cell(posx, posy, cellWidth - 5, cellWidth - 5, 0, Cell.Type.Blue, new Vector2D(boardx, boardy), false);
             _board[boardx][boardy].setLogic(_logic);
             _board[boardx][boardy].setBoard(this);
         }
