@@ -43,7 +43,7 @@ public class HintManager {
                         _hints.add(new Hint(4, c.getPos()));
                     }
                     // PISTA 5
-                    else if (excesiveRed(c)) {
+                    else if (excesiveRed(c) || _board.countAdjacent(c.getPos().x, c.getPos().y) < c.getNumber()) {
                         _hints.add(new Hint(5, c.getPos()));
                     }
                 }
@@ -57,9 +57,7 @@ public class HintManager {
                     // PISTA 7
                     if (checkRed(c)) {
                         _hints.add(new Hint(7, c.getPos()));
-                    }
-                    else if (mustBeRed(c))
-                    {
+                    } else if (mustBeRed(c)) {
                         _hints.add(new Hint(9, c.getPos()));
                     }
                 }
@@ -209,12 +207,11 @@ public class HintManager {
         int count = 0;
         for (Vector2D dir : _dirs) {
             Cell next = _board.nextCell(c.getPos(), dir);
-            if (next != null && next.getType() != Cell.Type.Red)
-            {
+            if (next != null && next.getType() != Cell.Type.Red) {
                 count++;
             }
         }
-        if (count <= 0 )
+        if (count <= 0)
             return true;
         return false;
     }
