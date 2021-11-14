@@ -139,7 +139,7 @@ public class Board {
                         return false;
                 } else if (n == 0) {
                     //comprobacion de casillas que deberian ser rojas
-                    if (checkRed(i, j) && (_board[i][j].getType() != Cell.Type.Red && _board[i][j].getType() != Cell.Type.Red))
+                    if (checkRed(i, j) && (_board[i][j].getType() != Cell.Type.Red ))
                         return false;
                 }
             }

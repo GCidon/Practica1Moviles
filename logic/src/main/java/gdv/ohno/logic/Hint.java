@@ -31,6 +31,9 @@ public class Hint {
             case 8:
                 _text = "Solo queda una\ndireccion posible";
                 break;
+            case 9:
+                _text = "Debe tener al menos\nun azul fijo";
+                break;
             default:
                 _text = "";
                 break;
