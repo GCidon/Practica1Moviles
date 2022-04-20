@@ -10,7 +10,7 @@ import gdv.ohno.engine.Image;
 
 public class PCImage implements Image {
 
-    public PCImage(String name) throws Exception {
+    public PCImage(String name) {
         _image = null;
         try {
             _image = ImageIO.read(new File("data/"+name));

@@ -18,7 +18,7 @@ public class AndroidGraphics implements Graphics {
     }
 
     @Override
-    public AndroidFont newFont(String filename, float size, boolean isBold) throws Exception {
+    public AndroidFont newFont(String filename, float size, boolean isBold)  {
         AndroidFont ret = new AndroidFont(filename, size, isBold, context);
         return ret;
     }
@@ -116,7 +116,7 @@ public class AndroidGraphics implements Graphics {
     }
 
     //Metodo util para el correcto reescalado de la pantalla. Devuelve el el ancho o el alto dependiendo de cual es mayor
-    public float calculateSize() {
+    public float getProportion() {
         float aux1 = 0;
         float aux2 = 0;
 

@@ -26,7 +26,7 @@ public class AndroidInput implements Input {
     }
 
     @Override
-    public ArrayList<Input.TouchEvent> getTouchEvents() {
+    synchronized public ArrayList<Input.TouchEvent> getTouchEvents() {
         ArrayList<Input.TouchEvent> aux = new ArrayList<Input.TouchEvent>(_touchEvents);
         _touchEvents.clear();
         return aux;

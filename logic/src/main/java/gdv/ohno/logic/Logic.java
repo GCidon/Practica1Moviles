@@ -16,7 +16,7 @@ public class Logic implements gdv.ohno.engine.Logic {
 
     }
 
-    public void update(float deltaTime) throws Exception {
+    public void update(float deltaTime) {
         if (_state == GameState.LEVEL && !_end) {
             //Comprobacion de victoria
             if (_logicGame.getBoard().CheckWin() && _logicGame.getBoard().getCompletedPercentage() == 100) {
@@ -37,7 +37,7 @@ public class Logic implements gdv.ohno.engine.Logic {
         }
     }
 
-    public void render(Graphics g) throws Exception {
+    public void render(Graphics g) {
         switch (_state) {
             case MENU:
                 _logicMenu.render(g);
@@ -48,7 +48,7 @@ public class Logic implements gdv.ohno.engine.Logic {
         }
     }
 
-    public void handleInput(List<Input.TouchEvent> te) throws Exception {
+    public void handleInput(List<Input.TouchEvent> te) {
         if (!_end) {
             switch (_state) {
                 case MENU:
@@ -61,14 +61,14 @@ public class Logic implements gdv.ohno.engine.Logic {
         }
     }
 
-    public void init() throws Exception {
+    public void init() {
         _engine.getGraphics().setBaseWidth(400);
         _engine.getGraphics().setBaseHeight(600);
 
         startMenu();
     }
 
-    public void startMenu() throws Exception {
+    public void startMenu() {
         _state = GameState.MENU;
         _logicMenu = new LogicMenu(_engine, this);
         try {
@@ -78,7 +78,7 @@ public class Logic implements gdv.ohno.engine.Logic {
         }
     }
 
-    public void startGame(int size) throws Exception {
+    public void startGame(int size) {
         _state = GameState.LEVEL;
         _logicGame = new LogicGame(_engine, this, size);
         try {
@@ -101,7 +101,7 @@ public class Logic implements gdv.ohno.engine.Logic {
     }
 
     //diferentes acciones para botones
-    public void processButton(String action) throws Exception {
+    public void processButton(String action) {
         switch (action) {
             case "select":
                 selectLevel();
@@ -134,7 +134,7 @@ public class Logic implements gdv.ohno.engine.Logic {
         return _logicMenu;
     }
 
-    public void getEngine(Engine engine) {
+    public void setEngine(Engine engine) {
         _engine = engine;
     }
 

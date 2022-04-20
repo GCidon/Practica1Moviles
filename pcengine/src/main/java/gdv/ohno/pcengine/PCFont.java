@@ -4,8 +4,8 @@ import java.awt.*;
 import java.io.File;
 import gdv.ohno.engine.Font;
 
-public class PCFont extends Frame implements Font {
-    public PCFont(String is, float _size, boolean _isBold) throws Exception {
+public class PCFont implements Font {
+    public PCFont(String is, float _size, boolean _isBold) {
         java.awt.Font auxFont;
         try
         {

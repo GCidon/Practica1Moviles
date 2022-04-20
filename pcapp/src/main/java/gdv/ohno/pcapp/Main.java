@@ -10,7 +10,7 @@ import gdv.ohno.pcengine.PCEngine;
 import gdv.ohno.pcengine.PCGraphics;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         //Creamos los 3 elementos necesarios : Motor, graficos y logica
         Toolkit tk = Toolkit.getDefaultToolkit();
         PCEngine engine;
@@ -39,7 +39,6 @@ public class Main {
         //Inicializamos la logica
         _logic = new Logic();
         engine = new PCEngine(_logic, frame);
-        _logic.getEngine(engine);
 
         //Comenzamos el bucle principal
         try {

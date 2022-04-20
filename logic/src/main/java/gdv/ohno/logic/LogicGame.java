@@ -95,7 +95,7 @@ public class LogicGame {
         }
     }
 
-    public void handleInput(List<Input.TouchEvent> te) throws Exception {
+    public void handleInput(List<Input.TouchEvent> te) {
         for (Input.TouchEvent e : te) {
             if(_undo) {
                 _hint = false;

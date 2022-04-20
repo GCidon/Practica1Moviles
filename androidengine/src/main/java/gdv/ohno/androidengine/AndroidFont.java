@@ -4,7 +4,7 @@ import android.content.Context;
 import gdv.ohno.engine.Font;
 
 public class AndroidFont implements Font {
-    public AndroidFont(String filename,float size, boolean isBold, Context context) throws Exception{
+    public AndroidFont(String filename,float size, boolean isBold, Context context) {
         try {
             f = Typeface.createFromAsset(context.getAssets(), filename);
         } catch(Exception e) {

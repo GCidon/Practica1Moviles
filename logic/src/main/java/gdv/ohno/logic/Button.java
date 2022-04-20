@@ -19,7 +19,7 @@ public class Button extends GameObject {
 
     }
 
-    public void handleInput(Input.TouchEvent te) throws Exception {
+    public void handleInput(Input.TouchEvent te) {
         //Transformamos las coordenadas del raton a las coordenadas transformadas y escaladas
         float _ratonx = (te.getPosX() - _logic._engine.getGraphics().getWidth()/2)/_scale;
         float _ratony = (_logic._engine.getGraphics().getHeight()/2 - te.getPosY())/_scale;

@@ -11,6 +11,7 @@ public class PCEngine implements Engine {
     public PCEngine(Logic _logic, JFrame frame) {
         logica = _logic;
         _frame = frame;
+        logica.setEngine(this);
     }
 
     public Graphics getGraphics() {
@@ -21,23 +22,23 @@ public class PCEngine implements Engine {
         return _input;
     }
 
-    public void update(double deltaTime) throws Exception {
+    public void update(double deltaTime) {
         logica.update((float) deltaTime);
     }
 
-    public void render(Graphics g) throws Exception {
+    public void render(Graphics g) {
         _graphics.clear(0xFFFFFFFF);
         _graphics.translate((int) g.getWidth() / 2, (int) g.getHeight() / 2);
-        _graphics.scale(g.calculateSize());
+        _graphics.scale(g.getProportion());
         logica.render(g);
     }
 
-    public void handleInput()throws Exception {
+    public void handleInput() {
         logica.handleInput(_input.getTouchEvents());
     }
 
     //Bucle principal del juego
-    public boolean running() throws Exception {
+    public boolean running() {
 
         _graphics = new PCGraphics(_frame);
         _input = new PCInput();
@@ -77,7 +78,7 @@ public class PCEngine implements Engine {
     }
 
     public float getProportion() {
-        return _graphics.calculateSize();
+        return _graphics.getProportion();
     }
 
     protected PCGraphics _graphics;

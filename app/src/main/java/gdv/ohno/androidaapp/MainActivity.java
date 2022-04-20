@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
         _logic = new Logic();
         engine = new AndroidEngine(_logic, _surface);
         engine.getContext(this);
-        _logic.getEngine(engine);
 
     }
 

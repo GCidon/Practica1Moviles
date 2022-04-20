@@ -97,7 +97,7 @@ public class Cell extends GameObject {
         }
     }
 
-    public void handleInput(Input.TouchEvent e) throws Exception {
+    public void handleInput(Input.TouchEvent e) {
         changeColor();
     }
 

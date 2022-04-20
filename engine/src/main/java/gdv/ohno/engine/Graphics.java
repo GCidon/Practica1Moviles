@@ -35,5 +35,5 @@ public interface Graphics {
     public void setBaseWidth(float w);
     public void setBaseHeight(float h);
 
-    public float calculateSize();
+    public float getProportion();
 }

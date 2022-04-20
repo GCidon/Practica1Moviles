@@ -29,23 +29,23 @@ public class AndroidEngine implements Engine, Runnable {
         return _input;
     }
 
-    public void update(double deltaTime) throws Exception {
+    public void update(double deltaTime) {
         logica.update((float) deltaTime);
     }
 
-    public void handleInput() throws Exception {
+    public void handleInput() {
         logica.handleInput(_input.getTouchEvents());
     }
 
-    public void render(Graphics g) throws Exception {
+    public void render(Graphics g) {
         _ag.clear(0xFF000000);
         _ag.translate((int) g.getWidth() / 2, (int) g.getHeight() / 2);
-        _ag.scale(g.calculateSize());
+        _ag.scale(g.getProportion());
         logica.render(g);
     }
 
     //Bucle principal
-    public boolean running() throws Exception {
+    public boolean running() {
         _input = new AndroidInput();
         _input.setEngine(this);
         _input.init();
@@ -132,12 +132,12 @@ public class AndroidEngine implements Engine, Runnable {
     public int getHeight() { return _windowHeight; }
 
     public float getProportion() {
-        return _ag.calculateSize();
+        return _ag.getProportion();
     }
 
     Thread _renderThread;
 
-    boolean _running = false;
+    volatile boolean _running = false;
 
     Canvas canvas;
     Context context;

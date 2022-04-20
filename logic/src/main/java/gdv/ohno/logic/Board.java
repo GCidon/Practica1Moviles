@@ -67,8 +67,8 @@ public class Board {
                     nAlrededor = countAdjacent(i, j);
                     if (nAlrededor == 0) {
                         _board[i][j].setType(Cell.Type.Red);
-                    } else {
-                        int rand = rnd.nextInt(3);
+                    } else if(nAlrededor <= _size){
+                        int rand = rnd.nextInt(2);
                         if (rand == 1) {
                             _board[i][j].setType(Cell.Type.Blue);
                             _board[i][j].setFixed(true);
@@ -106,7 +106,7 @@ public class Board {
         }
     }
 
-    public void handleInput(Input.TouchEvent e) throws Exception {
+    public void handleInput(Input.TouchEvent e) {
         //Transformacion de la pulsacion a posicion del tablero
         float proporcionEngine = _logic._engine.getProportion();
         float ratonx = (e.getPosX() - _logic._engine.getGraphics().getWidth() / 2)/proporcionEngine - _inix;

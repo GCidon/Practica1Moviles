@@ -41,7 +41,7 @@ public class LogicMenu {
     }
 
     //Renderizamos todo el texto
-    public void render(Graphics g) throws Exception {
+    public void render(Graphics g) {
         g.clear(0xFFFFFFFF);
 
         g.setFont(_fonts[1]);
@@ -102,7 +102,7 @@ public class LogicMenu {
     }
 
     //Input de los botones
-    public void handleInput(List<Input.TouchEvent> te) throws Exception {
+    public void handleInput(List<Input.TouchEvent> te) {
         for (int j = 0; j < te.size(); j++) {
             if(!_selecting) _buttons.get(0).handleInput((te.get(j)));
             else {
