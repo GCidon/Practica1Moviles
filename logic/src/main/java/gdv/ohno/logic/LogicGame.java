@@ -28,6 +28,7 @@ public class LogicGame {
         _fonts[0] = _engine.getGraphics().newFont("fonts/JosefinSans-Bold.ttf", size, true);
         _fonts[1] = _engine.getGraphics().newFont("fonts/JosefinSans-Bold.ttf", 20, true);
         _fonts[2] = _engine.getGraphics().newFont("fonts/JosefinSans-Bold.ttf", size / 2, true);
+        _fonts[3] = _engine.getGraphics().newFont("fonts/JosefinSans-Bold.ttf", 50, true);
 
         //Imagenes
         _images[0] = _engine.getGraphics().newImage("sprites/eye.png");
@@ -53,24 +54,25 @@ public class LogicGame {
     public void render(Graphics g) {
         g.clear(0xFFFFFFFF);
 
-        g.setFont(_fonts[0]);
+        g.setFont(_fonts[3]);
         g.setColor(0xFF000000);
         String text;
         if (!_end && !_hint) {
             //Texto de tamaño de tablero
             text = _board.getSize() + "x" + _board.getSize();
-            g.drawText(text, (int) (-40), (int) (-220));
+            g.drawText(text, text.length() * -12, (int)-g.getBaseHeight()/3-10);
         } else if (_hint && !_end) {
             //Texto de pista o deshacer
-            g.setFont(_fonts[2]);
+            g.setFont(_fonts[1]);
             String[] ss = _hintText.split("\n");
             for (int i = 0; i < ss.length; i++) {
-                g.drawText(ss[i], ss[i].length() * -6, -220 + i * 30);
+                g.drawText(ss[i], ss[i].length() * -5, -250 + i * 30);
             }
         } else {
             //Texto de ganar partida
+            g.setFont((_fonts[3]));
             text = "¡Bien hecho!";
-            g.drawText(text, text.length() * -12, (int) (-200));
+            g.drawText(text, text.length() * -12, (int)-g.getBaseHeight()/3-10);
         }
 
         //Texto de porcentaje
@@ -158,7 +160,7 @@ public class LogicGame {
     boolean _undo = false;
 
     List<Button> _buttons;
-    Font _fonts[] = new Font[3];
+    Font _fonts[] = new Font[4];
     Image _images[] = new Image[5];
     Board _board;
     HintManager _manager;

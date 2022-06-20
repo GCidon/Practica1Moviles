@@ -67,7 +67,7 @@ public class AndroidGraphics implements Graphics {
     }
 
     public void fillCircle(int x, int y, int r) {
-        _c.drawCircle(x+r*2/3, y+r*2/3, r/2, _p);
+        _c.drawCircle(x+r/2, y+r/2, r/2, _p);
     }
 
     @Override

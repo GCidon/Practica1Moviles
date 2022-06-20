@@ -23,14 +23,10 @@ public class Main {
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        //frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        //frame.setUndecorated(true);
-        //frame.setSize((int)tk.getScreenSize().getWidth(), (int)tk.getScreenSize().getHeight());
-
         frame.pack();
         frame.setVisible(true);
 
-        frame.setSize(980, 490);
+        frame.setSize(800, 600);
 
         frame.setIgnoreRepaint(true);
         frame.createBufferStrategy(2);

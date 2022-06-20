@@ -30,7 +30,7 @@ public class LogicMenu {
         _images[1] = _engine.getGraphics().newImage("sprites/q42.png");
 
         //Botones
-        _buttons.add(new Button(-50, 0, 110, 50, "select", _logica));
+        _buttons.add(new Button(-70, 30, 110, 50, "select", _logica));
         _buttons.add(new Button(-120, 0, 75, 75, "level4", _logica));
         _buttons.add(new Button(-40, 0, 75, 75, "level5", _logica));
         _buttons.add(new Button(40, 0, 75, 75, "level6", _logica));
@@ -40,18 +40,18 @@ public class LogicMenu {
         _buttons.add(new Button(-20, 220, 50, 50, "cancel", _logica));
     }
 
-    //Renderizamos todo el texto
+    //Renderizamos el texto
     public void render(Graphics g) {
         g.clear(0xFFFFFFFF);
 
         g.setFont(_fonts[1]);
         g.setColor(0xFF000000);
-        g.drawText("Oh no", -150, (int) (-g.getBaseHeight() / 4));
+        g.drawText("Oh no", -140, (int) (-g.getBaseHeight() / 3));
 
         //pantalla inicial
         if(!_selecting) {
             g.setFont(_fonts[0]);
-            g.drawText("Jugar", -50, 0);
+            g.drawText("Jugar", -35, 0);
 
             g.setFont(_fonts[2]);
             g.setColor(0xFFC1C1C1);
@@ -83,7 +83,7 @@ public class LogicMenu {
                 g.fillCircle(posx, -iniy, 75);
                 g.setColor(0xFFFFFFFF);
                 g.setFont(_fonts[0]);
-                g.drawText(String.valueOf(i+4), posx + 25, iniy - 20);
+                g.drawText(String.valueOf(i+4), posx+25, iniy-25);
             }
 
             g.save();

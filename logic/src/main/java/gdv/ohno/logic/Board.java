@@ -21,7 +21,7 @@ public class Board {
 
     public void GenerateBoard() {
         //Tamaño de las celdas
-        int cellWidth = (int) (_windowWidth*0.9 / _size);
+        int cellWidth = (int) (_windowWidth / _size);
 
         //creamos una lista de numeros, indicando el indice de cada casilla
         ArrayList<Integer> listaRnd = new ArrayList<Integer>();
@@ -37,8 +37,8 @@ public class Board {
         for (int i = 0; i < minRed; i++) {
             boardx = listaRnd.get(i) / _size;
             boardy = listaRnd.get(i) % _size;
-            posx = boardx * cellWidth - (_windowWidth / 2) + cellWidth/2;
-            posy = boardy * cellWidth - (_windowWidth / 2) + cellWidth/2;
+            posx = boardx * cellWidth - (_windowWidth / 2);
+            posy = boardy * cellWidth - (_windowWidth / 2);
             _board[boardx][boardy] = new Cell(posx, posy, cellWidth, cellWidth, 0, Cell.Type.Red, new Vector2D(boardx, boardy), false);
             _board[boardx][boardy].setLogic(_logic);
             _board[boardx][boardy].setBoard(this);
@@ -47,8 +47,8 @@ public class Board {
         for (int i = minRed; i < listaRnd.size(); i++) {
             boardx = listaRnd.get(i) / _size;
             boardy = listaRnd.get(i) % _size;
-            posx = boardx * cellWidth - (_windowWidth / 2) + cellWidth/2;
-            posy = boardy * cellWidth - (_windowWidth / 2) + cellWidth/2;
+            posx = boardx * cellWidth - (_windowWidth / 2);
+            posy = boardy * cellWidth - (_windowWidth / 2);
             _board[boardx][boardy] = new Cell(posx, posy, cellWidth, cellWidth, 0, Cell.Type.Blue, new Vector2D(boardx, boardy), false);
             _board[boardx][boardy].setLogic(_logic);
             _board[boardx][boardy].setBoard(this);
@@ -114,15 +114,17 @@ public class Board {
             int casillax = (int)(ratonx) / (_windowWidth / _size);
             int casillay = (int)(ratony) / (_windowWidth / _size);
 
-            //Guardar movimiento
-            if (!_board[casillax][casillay].isFixed())
-                _moves.push(new Vector2D(casillax, casillay));
+            if(casillax < _board.length && casillay < _board[0].length) {
+                //Guardar movimiento
+                if (!_board[casillax][casillay].isFixed())
+                    _moves.push(new Vector2D(casillax, casillay));
 
-            _board[casillax][casillay].handleInput(e);
-            //actualiza el contador de complecion
-            if (_board[casillax][casillay].getType() == Cell.Type.Empty) _completed -= 1;
-            if (_board[casillax][casillay].getType() == Cell.Type.Blue && !_board[casillax][casillay].isFixed())
-                _completed += 1;
+                _board[casillax][casillay].handleInput(e);
+                //actualiza el contador de complecion
+                if (_board[casillax][casillay].getType() == Cell.Type.Empty) _completed -= 1;
+                if (_board[casillax][casillay].getType() == Cell.Type.Blue && !_board[casillax][casillay].isFixed())
+                    _completed += 1;
+            }
         }
     }
 
