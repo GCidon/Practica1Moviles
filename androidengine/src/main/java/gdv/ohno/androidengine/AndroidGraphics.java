@@ -67,11 +67,7 @@ public class AndroidGraphics implements Graphics {
     }
 
     public void fillCircle(int x, int y, int r) {
-        //Calculamos proporciones para el circulo
-        float baseProportion = getBaseWidth()/getBaseHeight();
-        float proportion = getWidth()/getHeight();
-        int radius = (int)((r*proportion)/baseProportion);
-        _c.drawCircle(x+radius*2/3, y+radius*2/3, radius*2/3, _p);
+        _c.drawCircle(x+r*2/3, y+r*2/3, r/2, _p);
     }
 
     @Override
@@ -99,6 +95,10 @@ public class AndroidGraphics implements Graphics {
         _c.drawBitmap(img.getImage(), d, r, _p);
     }
 
+    public void drawLine(int x1, int y1, int x2, int y2) {
+        _c.drawLine(x1, y1, x2, y2, _p);
+    }
+
     public float getWidth() {
         return _c.getWidth();
     }
@@ -120,8 +120,8 @@ public class AndroidGraphics implements Graphics {
         float aux1 = 0;
         float aux2 = 0;
 
-        aux1 = getWidth() / (float) getBaseWidth();
-        aux2 = getHeight() / (float) getBaseHeight();
+        aux1 = (float) getWidth() / (float) getBaseWidth();
+        aux2 = (float) getHeight() / (float) getBaseHeight();
 
         if (aux1 < aux2)
             return aux1;

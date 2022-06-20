@@ -1,13 +1,9 @@
 package gdv.ohno.logic;
 
-import org.graalvm.compiler.hotspot.nodes.aot.PluginFactory_EncodedSymbolNode;
-import org.graalvm.compiler.lir.amd64.vector.AMD64VectorMove;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 import java.util.Stack;
-import java.util.Vector;
 
 import gdv.ohno.engine.Graphics;
 import gdv.ohno.engine.Input;
@@ -25,7 +21,7 @@ public class Board {
 
     public void GenerateBoard() {
         //Tamaño de las celdas
-        int cellWidth = (int) (_windowWidth * 0.9 / _size);
+        int cellWidth = (int) (_windowWidth*0.9 / _size);
 
         //creamos una lista de numeros, indicando el indice de cada casilla
         ArrayList<Integer> listaRnd = new ArrayList<Integer>();
@@ -41,9 +37,9 @@ public class Board {
         for (int i = 0; i < minRed; i++) {
             boardx = listaRnd.get(i) / _size;
             boardy = listaRnd.get(i) % _size;
-            posx = boardx * cellWidth - (_windowWidth / 2) + (int) (_windowWidth * 0.05);
-            posy = boardy * cellWidth - (_windowWidth / 2) + (int) (_windowWidth * 0.05);
-            _board[boardx][boardy] = new Cell(posx, posy, cellWidth - 5, cellWidth - 5, 0, Cell.Type.Red, new Vector2D(boardx, boardy), false);
+            posx = boardx * cellWidth - (_windowWidth / 2) + cellWidth/2;
+            posy = boardy * cellWidth - (_windowWidth / 2) + cellWidth/2;
+            _board[boardx][boardy] = new Cell(posx, posy, cellWidth, cellWidth, 0, Cell.Type.Red, new Vector2D(boardx, boardy), false);
             _board[boardx][boardy].setLogic(_logic);
             _board[boardx][boardy].setBoard(this);
         }
@@ -51,9 +47,9 @@ public class Board {
         for (int i = minRed; i < listaRnd.size(); i++) {
             boardx = listaRnd.get(i) / _size;
             boardy = listaRnd.get(i) % _size;
-            posx = boardx * cellWidth - (_windowWidth / 2) + (int) (_windowWidth * 0.05);
-            posy = boardy * cellWidth - (_windowWidth / 2) + (int) (_windowWidth * 0.05);
-            _board[boardx][boardy] = new Cell(posx, posy, cellWidth - 5, cellWidth - 5, 0, Cell.Type.Blue, new Vector2D(boardx, boardy), false);
+            posx = boardx * cellWidth - (_windowWidth / 2) + cellWidth/2;
+            posy = boardy * cellWidth - (_windowWidth / 2) + cellWidth/2;
+            _board[boardx][boardy] = new Cell(posx, posy, cellWidth, cellWidth, 0, Cell.Type.Blue, new Vector2D(boardx, boardy), false);
             _board[boardx][boardy].setLogic(_logic);
             _board[boardx][boardy].setBoard(this);
         }
@@ -115,8 +111,8 @@ public class Board {
         //Comprobar si la pulsacion esta dentro del tablero
         if (ratony > 0 && ratony < _windowWidth && ratonx > 0 && ratonx < _windowWidth) {
             //Traduccion a casilla especifica
-            int casillax = (int) (Math.abs(ratonx / (_windowWidth / _size)));
-            int casillay = (int) (Math.abs(ratony / (_windowWidth / _size)));
+            int casillax = (int)(ratonx) / (_windowWidth / _size);
+            int casillay = (int)(ratony) / (_windowWidth / _size);
 
             //Guardar movimiento
             if (!_board[casillax][casillay].isFixed())

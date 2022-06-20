@@ -18,6 +18,8 @@ public interface Graphics {
     //dx, dy, dx2, dy2 posiciones en pantalla - sx, sy, sx2, sy2 posiciones de imagen
     public void drawFramedImage(Image image, int dx, int dy, int dx2, int dy2, int sx, int sy, int sx2, int sy2);
 
+    public void drawLine(int x1, int y1, int x2, int y2);
+
     public void setColor(int color);
 
     public void fillCircle(int x, int y, int r);

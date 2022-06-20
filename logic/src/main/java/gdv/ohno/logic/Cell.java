@@ -95,6 +95,13 @@ public class Cell extends GameObject {
             g.drawImage(_logic.getLogicGame().getImage(3), (int) (_x + (_w * 0.125) ), (int) -(_y + (_h *0.875) ), (int) (_w * 0.75), (int) (_h * 0.75));
             g.restore();
         }
+
+        //g.setColor(0xFFFF0000);
+        //g.drawLine(_x, _y, _x, (int)(_y+_h));
+        //g.drawLine(_x, _y, (int)(_x+_w), _y);
+        //g.drawLine((int)(_x+_w), _y, (int)(_x+_w), (int)(_y+_h));
+        //g.drawLine(_x, (int)(_y+_h), (int)(_x+_w), (int)(_y+_h));
+
     }
 
     public void handleInput(Input.TouchEvent e) {

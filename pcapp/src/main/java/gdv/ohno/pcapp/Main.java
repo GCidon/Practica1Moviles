@@ -30,7 +30,7 @@ public class Main {
         frame.pack();
         frame.setVisible(true);
 
-        frame.setSize(400, 600);
+        frame.setSize(980, 490);
 
         frame.setIgnoreRepaint(true);
         frame.createBufferStrategy(2);

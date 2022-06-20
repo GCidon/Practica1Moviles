@@ -51,6 +51,7 @@ public class AndroidEngine implements Engine, Runnable {
         _input.init();
         _ag = new AndroidGraphics();
         _ag.getContext(context);
+        logica.setEngine(this);
         logica.init();
         _running = true;
         double lastTime = System.nanoTime();
